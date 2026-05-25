@@ -6,22 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('mensualidades', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('mensualidades', function (Blueprint $table) {
+            $table->foreignId('alumno_id')->constrained('alumnos')->onDelete('cascade');
+            $table->integer('mes');
+            $table->decimal('monto', 10, 2);
+            $table->enum('estado', ['Pendiente', 'Pagado'])->default('Pendiente');
+            $table->date('fecha_vencimiento');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('mensualidades');
+        Schema::table('mensualidades', function (Blueprint $table) {
+            $table->dropForeign(['alumno_id']);
+            $table->dropColumn(['alumno_id', 'mes', 'monto', 'estado', 'fecha_vencimiento']);
+        });
     }
 };

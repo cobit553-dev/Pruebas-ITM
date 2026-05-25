@@ -1,238 +1,161 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Panel Principal — I.T.M.
-        </h2>
-    </x-slot>
+<div style="display:flex; height:100vh; overflow:hidden;" class="fade-in">
 
-    <div class="flex gap-5 p-5 min-h-screen bg-gray-100">
+    {{-- ===== SIDEBAR ===== --}}
+    <aside style="width:220px; flex-shrink:0; background:#1e293b; border-right:1px solid #334155; display:flex; flex-direction:column; padding:20px 12px; gap:2px; overflow-y:auto;">
 
-        {{-- ===================== SIDEBAR ===================== --}}
-        <aside class="w-56 flex-shrink-0 rounded-2xl flex flex-col py-5 px-4 gap-1" style="background:#0d2e4d;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #334155;">
+            <img src="{{ asset("images/logo_itm.jpg") }}" alt="ITM Aguilares" style="width:38px; height:38px; border-radius:10px; flex-shrink:0; object-fit:cover;">
+            <div>
+                <p style="font-weight:700; font-size:14px; color:#fff;">ITM Aguilares</p>
+                <p style="font-size:11px; color:#64748b;">Sistema Académico</p>
+            </div>
+        </div>
 
-            {{-- Brand con logo --}}
-            <div class="flex items-center gap-3 mb-5 pb-4" style="border-bottom: 0.5px solid rgba(255,255,255,0.08);">
-                <img src="{{ asset('images/logo_itm.jpg') }}" alt="Logo ITM"
-                     class="w-10 h-10 rounded-xl object-cover flex-shrink-0">
+        <p style="font-size:9px; color:#475569; text-transform:uppercase; letter-spacing:.1em; font-weight:600; padding:6px 8px 3px;">Principal</p>
+        <a href="{{ route('dashboard') }}" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; font-size:13px; font-weight:600; background:rgba(16,185,129,.15); color:#34d399; text-decoration:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Panel principal
+        </a>
+        @foreach([['Alumnos','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'],['Encargados','M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'],['Maestros','M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z'],['Directores','M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z']] as [$label,$path])
+        <a href="#" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; font-size:13px; color:#64748b; text-decoration:none; transition:all .15s;"
+           onmouseover="this.style.background='#334155';this.style.color='#e2e8f0'" onmouseout="this.style.background='transparent';this.style.color='#64748b'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="{{ $path }}"/><circle cx="12" cy="7" r="4"/></svg>
+            {{ $label }}
+        </a>
+        @endforeach
+
+        <p style="font-size:9px; color:#475569; text-transform:uppercase; letter-spacing:.1em; font-weight:600; padding:10px 8px 3px;">Académico</p>
+        @foreach([['Materias','M4 19.5A2.5 2.5 0 0 1 6.5 17H20'],['Secciones','M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'],['Inscripciones','M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'],['Notas','M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'],['Boletas','M9 11l3 3L22 4']] as [$label,$path])
+        <a href="#" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; font-size:13px; color:#64748b; text-decoration:none; transition:all .15s;"
+           onmouseover="this.style.background='#334155';this.style.color='#e2e8f0'" onmouseout="this.style.background='transparent';this.style.color='#64748b'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="{{ $path }}"/></svg>
+            {{ $label }}
+        </a>
+        @endforeach
+
+        <p style="font-size:9px; color:#475569; text-transform:uppercase; letter-spacing:.1em; font-weight:600; padding:10px 8px 3px;">Finanzas</p>
+        @foreach([['Mensualidades','M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'],['Pagos','M1 4h22v16H1z']] as [$label,$path])
+        <a href="#" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; font-size:13px; color:#64748b; text-decoration:none; transition:all .15s;"
+           onmouseover="this.style.background='#334155';this.style.color='#e2e8f0'" onmouseout="this.style.background='transparent';this.style.color='#64748b'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="{{ $path }}"/></svg>
+            {{ $label }}
+        </a>
+        @endforeach
+
+        <div style="margin-top:auto; padding-top:14px; border-top:1px solid #334155; display:flex; align-items:center; gap:10px;">
+            <img src="{{ asset("images/logo_itm.jpg") }}" alt="ITM Aguilares" style="width:32px; height:32px; border-radius:50%; flex-shrink:0; object-fit:cover;">
+            <div style="flex:1; overflow:hidden;">
+                <p style="font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#e2e8f0;">{{ Auth::user()->name }}</p>
+                <p style="font-size:11px; color:#475569;">Director</p>
+            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" title="Salir" style="background:none; border:none; cursor:pointer; color:#475569; padding:4px;"
+                        onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#475569'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    {{-- ===== MAIN ===== --}}
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+
+        {{-- Header --}}
+        <header style="background:#1e293b; border-bottom:1px solid #334155; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <div>
+                <h2 style="font-size:17px; font-weight:700; margin:0;">Panel del Director</h2>
+                <p style="font-size:12px; color:#64748b; margin:0;">Ciclo escolar 2026 · I.T.M. Aguilares</p>
+            </div>
+            <span style="font-size:12px; color:#475569;">{{ now()->isoFormat('MMMM YYYY') }}</span>
+        </header>
+
+        {{-- Content --}}
+        <div style="flex:1; overflow-y:auto; padding:24px;" class="fade-in">
+
+            {{-- Banner --}}
+            <div style="background:#134e4a; border:1px solid #0f766e; border-radius:14px; padding:20px 24px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
                 <div>
-                    <p class="font-semibold text-white text-sm leading-tight">I.T.M.</p>
-                    <p class="text-xs" style="color:#6b9cc2;">Inst. Comp. Aguilares</p>
+                    <h3 style="font-size:16px; font-weight:700; color:#34d399; margin:0 0 4px;">Bienvenido, {{ Auth::user()->name }}</h3>
+                    <p style="font-size:13px; color:#5eead4; margin:0;">Resumen del ciclo escolar 2026</p>
                 </div>
-            </div>
-
-            {{-- Principal --}}
-            <p class="text-xs px-2 pt-2 pb-1 uppercase tracking-widest font-medium" style="color:#2d5a7e; font-size:9px;">Principal</p>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium" style="background:rgba(245,158,11,0.18); color:#fbbf24;">
-                Panel principal
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Alumnos
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Encargados
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Maestros
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Directores
-            </a>
-
-            {{-- Académico --}}
-            <p class="text-xs px-2 pt-3 pb-1 uppercase tracking-widest font-medium" style="color:#2d5a7e; font-size:9px;">Académico</p>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Materias
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Cursos
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Inscripciones
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Notas
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Boletas
-            </a>
-
-            {{-- Finanzas --}}
-            <p class="text-xs px-2 pt-3 pb-1 uppercase tracking-widest font-medium" style="color:#2d5a7e; font-size:9px;">Finanzas</p>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Mensualidades
-            </a>
-            <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-white/5 transition" style="color:#7aaecf;">
-                Pagos
-            </a>
-
-            {{-- Usuario --}}
-            <div class="mt-auto pt-4 flex items-center gap-2 px-1" style="border-top: 0.5px solid rgba(95, 21, 21, 0.08);">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0" style="background:#f59e0b;">
-                    DA
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-xs font-medium truncate" style="color:#d0e8f5;">Dir. Alvarado</p>
-                    <p style="font-size:10px; color:#2d5a7e;">Administrador</p>
-                </div>
-            </div>
-
-        </aside>
-
-        {{-- ===================== CONTENIDO ===================== --}}
-        <div class="flex-1 flex flex-col gap-4">
-
-            {{-- Topbar --}}
-            <div class="bg-white rounded-2xl px-5 py-3 flex items-center gap-3 border border-gray-200">
-                <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM" class="w-7 h-7 rounded-lg object-cover flex-shrink-0">
-                <span class="text-sm font-medium text-gray-700 flex-1">Panel principal</span>
-                <div class="flex items-center gap-2 bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-400 w-44">
-                    🔍 Buscar...
-                </div>
-                <span class="text-xs text-gray-400">Mayo 2026</span>
-                <span class="text-gray-400 cursor-pointer text-lg"></span>
-            </div>
-
-            {{-- Banner bienvenida --}}
-            <div class="rounded-2xl px-6 py-5 flex items-center justify-between" style="background:#0d2e4d; border-left: 4px solid #f59e0b;">
-                <div>
-                    <h2 class="font-semibold text-white text-lg mb-1">Buenos días, Director Alvarado</h2>
-                    <p class="text-sm" style="color:#6b9cc2;">Resumen del ciclo escolar 2026 — I.T.M. Aguilares</p>
-                </div>
-                <div class="flex gap-3">
-                    <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(245,158,11,0.15); border: 0.5px solid rgba(245,158,11,0.35);">
-                        <p class="font-semibold text-2xl" style="color:#fbbf24;">87%</p>
-                        <p class="text-xs mt-0.5" style="color:#f59e0b;">Pagos al día</p>
+                <div style="display:flex; gap:12px;">
+                    <div style="background:rgba(16,185,129,.2); border:1px solid rgba(16,185,129,.3); border-radius:10px; padding:12px 18px; text-align:center;">
+                        <p style="font-size:22px; font-weight:700; color:#34d399; margin:0;">87%</p>
+                        <p style="font-size:11px; color:#6ee7b7; margin:0;">Pagos al día</p>
                     </div>
-                    <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(245,158,11,0.15); border: 0.5px solid rgba(245,158,11,0.35);">
-                        <p class="font-semibold text-2xl" style="color:#fbbf24;">8.4</p>
-                        <p class="text-xs mt-0.5" style="color:#f59e0b;">Promedio general</p>
+                    <div style="background:rgba(16,185,129,.2); border:1px solid rgba(16,185,129,.3); border-radius:10px; padding:12px 18px; text-align:center;">
+                        <p style="font-size:22px; font-weight:700; color:#34d399; margin:0;">8.4</p>
+                        <p style="font-size:11px; color:#6ee7b7; margin:0;">Promedio general</p>
                     </div>
                 </div>
             </div>
 
             {{-- Métricas --}}
-            <div class="grid grid-cols-5 gap-3">
-                <div class="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
-                    <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-lg"></div>
-                    <p class="text-2xl font-medium text-gray-800">142</p>
-                    <p class="text-xs text-gray-400">Alumnos inscritos</p>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;">
+                @foreach([
+                    ['142','Alumnos inscritos','#1d4ed8','#3b82f6','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'],
+                    ['9','Maestros activos','#92400e','#f59e0b','M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5'],
+                    ['13','Materias activas','#065f46','#10b981','M4 19.5A2.5 2.5 0 0 1 6.5 17H20'],
+                    ['18','Pagos pendientes','#7f1d1d','#f87171','M12 1v22'],
+                ] as [$val,$label,$bg,$color,$path])
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:12px; padding:18px;">
+                    <div style="width:36px; height:36px; background:{{ $bg }}33; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="{{ $color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="{{ $path }}"/><circle cx="9" cy="7" r="4"/></svg>
+                    </div>
+                    <p style="font-size:26px; font-weight:700; color:#f1f5f9; margin:0 0 4px;">{{ $val }}</p>
+                    <p style="font-size:12px; color:#64748b; margin:0;">{{ $label }}</p>
                 </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
-                    <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-lg"></div>
-                    <p class="text-2xl font-medium text-gray-800">9</p>
-                    <p class="text-xs text-gray-400">Maestros activos</p>
-                </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
-                    <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg"></div>
-                    <p class="text-2xl font-medium text-gray-800">12</p>
-                    <p class="text-xs text-gray-400">Materias activas</p>
-                </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
-                    <div class="w-9 h-9 rounded-lg bg-orange-100 text-orange-700 flex items-center justify-center text-lg"></div>
-                    <p class="text-2xl font-medium text-gray-800">18</p>
-                    <p class="text-xs text-gray-400">Pagos pendientes</p>
-                </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
-                    <div class="w-9 h-9 rounded-lg bg-red-100 text-red-700 flex items-center justify-center text-lg"></div>
-                    <p class="text-2xl font-medium text-gray-800">6</p>
-                    <p class="text-xs text-gray-400">Boletas emitidas</p>
-                </div>
+                @endforeach
             </div>
 
             {{-- Tablas --}}
-            <div class="grid grid-cols-2 gap-4">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
                 {{-- Maestros --}}
-                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                    <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-700">Maestros y cursos asignados</p>
-                        <a href="#" class="text-xs font-medium" style="color:#f59e0b;">Gestionar</a>
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; overflow:hidden;">
+                    <div style="padding:14px 18px; border-bottom:1px solid #334155; display:flex; align-items:center; justify-content:space-between;">
+                        <p style="font-size:14px; font-weight:600; color:#e2e8f0; margin:0;">Maestros activos</p>
+                        <a href="#" style="font-size:12px; color:#10b981; text-decoration:none;">Gestionar</a>
                     </div>
-                    <ul class="divide-y divide-gray-100">
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <div class="w-8 h-8 rounded-full bg-violet-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">MR</div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-700">Marta Rivas</p>
-                                <p class="text-xs text-gray-400">Matemáticas · Curso A</p>
-                            </div>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Activo</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <div class="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">JC</div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-700">Jorge Cruz</p>
-                                <p class="text-xs text-gray-400">Ciencias · Curso B</p>
-                            </div>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Activo</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">LP</div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-700">Lucía Pérez</p>
-                                <p class="text-xs text-gray-400">Lenguaje · Curso A y B</p>
-                            </div>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Activo</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <div class="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">RA</div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-700">Roberto Ayala</p>
-                                <p class="text-xs text-gray-400">Historia · Curso C</p>
-                            </div>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Activo</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">VN</div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-700">Valeria Núñez</p>
-                                <p class="text-xs text-gray-400">Inglés · Sin asignar</p>
-                            </div>
-                            <span class="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-medium">Sin curso</span>
-                        </li>
-                    </ul>
+                    @foreach([
+                        ['CM','Carlos Mendoza','Windows, Word, Excel','#1d4ed8'],
+                        ['AL','Ana López','CorelDRAW, Photoshop, HTML','#7c3aed'],
+                    ] as [$ini,$nombre,$materias,$bg])
+                    <div style="display:flex; align-items:center; gap:12px; padding:12px 18px; border-top:1px solid #1e293b;">
+                        <div style="width:34px; height:34px; border-radius:50%; background:{{ $bg }}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0;">{{ $ini }}</div>
+                        <div style="flex:1; overflow:hidden;">
+                            <p style="font-size:13px; font-weight:500; color:#e2e8f0; margin:0;">{{ $nombre }}</p>
+                            <p style="font-size:11px; color:#475569; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $materias }}</p>
+                        </div>
+                        <span style="font-size:11px; background:rgba(16,185,129,.15); color:#34d399; padding:3px 10px; border-radius:20px; font-weight:600;">Activo</span>
+                    </div>
+                    @endforeach
                 </div>
 
                 {{-- Mensualidades --}}
-                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                    <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-700">Estado de mensualidades</p>
-                        <a href="#" class="text-xs font-medium" style="color:#f59e0b;">Ver detalle</a>
+                <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; overflow:hidden;">
+                    <div style="padding:14px 18px; border-bottom:1px solid #334155; display:flex; align-items:center; justify-content:space-between;">
+                        <p style="font-size:14px; font-weight:600; color:#e2e8f0; margin:0;">Estado de mensualidades</p>
+                        <a href="#" style="font-size:12px; color:#10b981; text-decoration:none;">Ver detalle</a>
                     </div>
-                    <ul class="divide-y divide-gray-100">
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <span class="text-gray-400">📅</span>
-                            <p class="text-sm font-medium text-gray-700 flex-1">Enero 2026</p>
-                            <p class="text-xs text-gray-400 mr-3">142 alumnos</p>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Pagado</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <span class="text-gray-400">📅</span>
-                            <p class="text-sm font-medium text-gray-700 flex-1">Febrero 2026</p>
-                            <p class="text-xs text-gray-400 mr-3">142 alumnos</p>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Pagado</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <span class="text-gray-400">📅</span>
-                            <p class="text-sm font-medium text-gray-700 flex-1">Marzo 2026</p>
-                            <p class="text-xs text-gray-400 mr-3">142 alumnos</p>
-                            <span class="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">Pagado</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <span class="text-gray-400">📅</span>
-                            <p class="text-sm font-medium text-gray-700 flex-1">Abril 2026</p>
-                            <p class="text-xs text-gray-400 mr-3">124 alumnos</p>
-                            <span class="text-xs bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full font-medium">Pendiente</span>
-                        </li>
-                        <li class="flex items-center gap-3 px-5 py-2.5">
-                            <span class="text-gray-400">📅</span>
-                            <p class="text-sm font-medium text-gray-700 flex-1">Mayo 2026</p>
-                            <p class="text-xs text-gray-400 mr-3">— alumnos</p>
-                            <span class="text-xs bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full font-medium">Pendiente</span>
-                        </li>
-                    </ul>
+                    @foreach([
+                        ['Enero 2026','Pagado','rgba(16,185,129,.15)','#34d399'],
+                        ['Febrero 2026','Pagado','rgba(16,185,129,.15)','#34d399'],
+                        ['Marzo 2026','Pagado','rgba(16,185,129,.15)','#34d399'],
+                        ['Abril 2026','Pendiente','rgba(245,158,11,.15)','#fbbf24'],
+                        ['Mayo 2026','Pendiente','rgba(245,158,11,.15)','#fbbf24'],
+                    ] as [$mes,$estado,$bg,$color])
+                    <div style="display:flex; align-items:center; padding:10px 18px; border-top:1px solid #0f172a;">
+                        <p style="font-size:13px; color:#cbd5e1; margin:0; flex:1;">{{ $mes }}</p>
+                        <span style="font-size:11px; background:{{ $bg }}; color:{{ $color }}; padding:3px 10px; border-radius:20px; font-weight:600;">{{ $estado }}</span>
+                    </div>
+                    @endforeach
                 </div>
 
             </div>
         </div>
     </div>
+</div>
 </x-app-layout>
