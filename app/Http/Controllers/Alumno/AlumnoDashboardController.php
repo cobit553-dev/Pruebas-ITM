@@ -73,6 +73,67 @@ class AlumnoDashboardController extends Controller
     }
 
     /**
+     * Página de inscripción
+     */
+    public function inscripcion()
+    {
+        $alumno = $this->getAlumno();
+
+        $inscripcion = Inscripcion::with('curso')
+            ->where('alumno_id', $alumno->id)
+            ->where('activa', true)
+            ->first();
+
+        $cursosDisponibles = collect();
+        if (!$inscripcion) {
+            $cursosDisponibles = Curso::where('activo', true)
+                ->where('anio_lectivo', 2026)
+                ->get();
+        }
+
+        return view('alumno.inscripcion', compact('alumno', 'inscripcion', 'cursosDisponibles'));
+    }
+
+    /**
+     * Página de mis notas
+     */
+    public function notas()
+    {
+        $alumno = $this->getAlumno();
+
+        $inscripcion = Inscripcion::with('curso')
+            ->where('alumno_id', $alumno->id)
+            ->where('activa', true)
+            ->first();
+
+        $notas = collect();
+        if ($inscripcion) {
+            $notas = Nota::with(['detalleCurso.materia','detalleCurso.maestro'])
+                ->where('alumno_id', $alumno->id)
+                ->whereHas('detalleCurso', fn($q) => $q->where('curso_id', $inscripcion->curso_id))
+                ->get();
+        }
+
+        $promedio = $notas->whereNotNull('promedio')->avg('promedio');
+
+        return view('alumno.notas', compact('alumno', 'inscripcion', 'notas', 'promedio'));
+    }
+
+    /**
+     * Página de estado de pagos
+     */
+    public function pagos()
+    {
+        $alumno = $this->getAlumno();
+
+        $mensualidades = Mensualidad::where('alumno_id', $alumno->id)
+            ->orderBy('mes', 'asc')
+            ->get();
+
+        return view('alumno.pagos', compact('alumno', 'mensualidades'));
+    }
+
+    /**
      * Inscribir alumno en un curso
      */
     public function inscribirse(Request $request)

@@ -1,0 +1,82 @@
+<x-app-layout>
+{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
+{{-- VISTA: ALUMNO - ESTADO DE PAGOS --}}
+{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
+
+<div style="display:flex; height:100vh; overflow:hidden;" class="fade-in">
+
+    @include('components.alumno-sidebar', ['active' => 'pagos'])
+
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+    {{-- ALUMNO: CONTENIDO PRINCIPAL --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+
+        <header style="background:#1e293b; border-bottom:1px solid #334155; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM Aguilares" style="width:36px; height:36px; border-radius:10px; object-fit:cover;">
+                <div>
+                    <h2 style="font-size:16px; font-weight:700; margin:0;">Portal Estudiantil</h2>
+                    <p style="font-size:12px; color:#64748b; margin:0;">{{ $alumno->nombre_completo }}</p>
+                </div>
+            </div>
+            <span style="font-size:12px; color:#475569;">{{ now()->isoFormat('MMMM YYYY') }}</span>
+        </header>
+
+        <div style="flex:1; overflow-y:auto; padding:24px;" class="fade-in">
+
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            {{-- ALUMNO: ESTADO DE MENSUALIDADES --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; overflow:hidden;">
+                <div style="padding:14px 18px; border-bottom:1px solid #334155; display:flex; align-items:center; justify-content:space-between;">
+                    <p style="font-size:14px; font-weight:600; color:#e2e8f0; margin:0;">Estado de mensualidades 2026</p>
+                    @php
+                        $pagados = $mensualidades->where('estado','pagado')->count();
+                        $totalMeses = $mensualidades->count();
+                    @endphp
+                    @if($totalMeses > 0)
+                    <span style="font-size:12px; color:#64748b;">{{ $pagados }}/{{ $totalMeses }} pagados</span>
+                    @endif
+                </div>
+
+                @if($mensualidades->count() > 0)
+                <div>
+                    @foreach($mensualidades as $m)
+                    <div style="display:flex; align-items:center; padding:13px 18px; border-top:1px solid #0f172a;"
+                         onmouseover="this.style.background='#162032'" onmouseout="this.style.background='transparent'">
+                        <div style="width:34px; height:34px; border-radius:8px; background:{{ $m->estado === 'pagado' ? 'rgba(16,185,129,.15)' : 'rgba(239,68,68,.15)' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-right:14px;">
+                            @if($m->estado === 'pagado')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            @else
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            @endif
+                        </div>
+                        <div style="flex:1;">
+                            <p style="font-size:13px; font-weight:500; color:#e2e8f0; margin:0;">{{ $m->mes }} {{ $m->anio }}</p>
+                            @if($m->fecha_pago)
+                            <p style="font-size:11px; color:#475569; margin:2px 0 0;">Pagado el {{ \Carbon\Carbon::parse($m->fecha_pago)->isoFormat('D MMM YYYY') }}</p>
+                            @endif
+                        </div>
+                        @if($m->monto > 0)
+                        <p style="font-size:13px; color:#94a3b8; margin:0 16px;">${{ number_format($m->monto, 2) }}</p>
+                        @endif
+                        <span style="font-size:11px; font-weight:600; padding:4px 12px; border-radius:20px;
+                            background:{{ $m->estado === 'pagado' ? 'rgba(16,185,129,.15)' : 'rgba(239,68,68,.15)' }};
+                            color:{{ $m->estado === 'pagado' ? '#34d399' : '#f87171' }};">
+                            {{ $m->estado === 'pagado' ? 'Pagado' : 'Pendiente' }}
+                        </span>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <div style="padding:40px; text-align:center;">
+                    <p style="color:#475569; font-size:13px;">No hay registros de mensualidades aún.</p>
+                </div>
+                @endif
+            </div>
+
+        </div>
+    </div>
+</div>
+</x-app-layout>
