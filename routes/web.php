@@ -29,4 +29,4 @@ require __DIR__.'/auth.php';
 
 require __DIR__.'/docente.php';
 require __DIR__.'/alumno.php';
-// require __DIR__.'/admin.php';  // Descomentar cuando se cree el módulo de administrador
+require __DIR__.'/admin.php';
