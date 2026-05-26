@@ -15,27 +15,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.dashboard');
 
     // ──────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Usuarios
+    // ADMINISTRADOR: Alumnos
     // ──────────────────────────────────────────────────────────────────────────────────────
-    Route::get('/admin/usuarios', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'usuarios'])
-        ->name('admin.usuarios');
+    Route::get('/admin/alumnos', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'alumnos'])
+        ->name('admin.alumnos');
 
     // ──────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Cursos
+    // ADMINISTRADOR: Maestros
     // ──────────────────────────────────────────────────────────────────────────────────────
-    Route::get('/admin/cursos', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'cursos'])
-        ->name('admin.cursos');
+    Route::get('/admin/maestros', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'maestros'])
+        ->name('admin.maestros');
 
     // ──────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Docentes
+    // ADMINISTRADOR: Materias
     // ──────────────────────────────────────────────────────────────────────────────────────
-    Route::get('/admin/docentes', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'docentes'])
-        ->name('admin.docentes');
+    Route::get('/admin/materias', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'materias'])
+        ->name('admin.materias');
 
     // ──────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Reportes
+    // ADMINISTRADOR: Secciones
     // ──────────────────────────────────────────────────────────────────────────────────────
-    Route::get('/admin/reportes', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'reportes'])
-        ->name('admin.reportes');
+    Route::get('/admin/secciones', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'secciones'])
+        ->name('admin.secciones');
 
 });
