@@ -1,11 +1,16 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
+// RUTAS: COMÚN
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -18,17 +23,10 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// ── Docente: registro de notas ──────────────────────────────────────────────
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/docente/notas', [\App\Http\Controllers\NotasDocenteController::class, 'index'])
-        ->name('docente.notas');
-    Route::post('/docente/notas/guardar', [\App\Http\Controllers\NotasDocenteController::class, 'guardar'])
-        ->name('docente.notas.guardar');
-});
-// ── Alumno: dashboard ───────────────────────────────────────────────────────
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/alumno/dashboard', [\App\Http\Controllers\AlumnoDashboardController::class, 'index'])
-        ->name('alumno.dashboard');
-    Route::post('/alumno/inscribirse', [\App\Http\Controllers\AlumnoDashboardController::class, 'inscribirse'])
-        ->name('alumno.inscribirse');
-});
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
+// IMPORTAR RUTAS POR ROL
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
+
+require __DIR__.'/docente.php';
+require __DIR__.'/alumno.php';
+// require __DIR__.'/admin.php';  // Descomentar cuando se cree el módulo de administrador

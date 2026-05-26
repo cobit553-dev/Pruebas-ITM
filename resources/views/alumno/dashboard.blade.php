@@ -1,7 +1,13 @@
 <x-app-layout>
+{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
+{{-- VISTA: ALUMNO - DASHBOARD --}}
+{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
+
 <div style="display:flex; height:100vh; overflow:hidden;" class="fade-in">
 
-    {{-- ===== SIDEBAR ===== --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+    {{-- ALUMNO: SIDEBAR --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     <aside style="width:220px; flex-shrink:0; background:#1e293b; border-right:1px solid #334155; display:flex; flex-direction:column; padding:20px 12px; gap:2px;">
 
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #334155;">
@@ -59,10 +65,12 @@
         </div>
     </aside>
 
-    {{-- ===== MAIN ===== --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+    {{-- ALUMNO: CONTENIDO PRINCIPAL --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
 
-        <header style="background:#1e293b; border-bottom:1px solid #334155; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+        {{-- Header --}}
             <div style="display:flex; align-items:center; gap:12px;">
                 <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM Aguilares" style="width:36px; height:36px; border-radius:10px; object-fit:cover;">
                 <div>
@@ -75,7 +83,7 @@
 
         <div style="flex:1; overflow-y:auto; padding:24px;" class="fade-in">
 
-            {{-- Alertas --}}
+            {{-- Mensajes de éxito/error --}}
             @if(session('success'))
             <div style="background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); color:#34d399; padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px;">
                 ✓ {{ session('success') }}
@@ -87,7 +95,9 @@
             </div>
             @endif
 
-            {{-- ===== SECCIÓN: INICIO ===== --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            {{-- ALUMNO: SECCIÓN INICIO --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             <div id="sec-inicio">
                 {{-- Banner --}}
                 <div style="background:#1c1400; border:1px solid #854d0e; border-radius:14px; padding:20px 24px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
@@ -154,7 +164,9 @@
                 @endif
             </div>
 
-            {{-- ===== SECCIÓN: INSCRIPCIÓN ===== --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            {{-- ALUMNO: SECCIÓN INSCRIPCIÓN --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             <div id="sec-inscripcion" style="display:none;">
                 <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; padding:24px;">
                     <h3 style="font-size:15px; font-weight:600; color:#e2e8f0; margin:0 0 18px;">Inscripción a sección</h3>
@@ -209,7 +221,9 @@
                 </div>
             </div>
 
-            {{-- ===== SECCIÓN: NOTAS ===== --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            {{-- ALUMNO: SECCIÓN NOTAS --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             <div id="sec-notas" style="display:none;">
                 <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; overflow:hidden;">
                     <div style="padding:14px 18px; border-bottom:1px solid #334155;">
@@ -270,7 +284,9 @@
                 </div>
             </div>
 
-            {{-- ===== SECCIÓN: PAGOS ===== --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            {{-- ALUMNO: SECCIÓN PAGOS --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             <div id="sec-pagos" style="display:none;">
                 <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; overflow:hidden;">
                     <div style="padding:14px 18px; border-bottom:1px solid #334155; display:flex; align-items:center; justify-content:space-between;">

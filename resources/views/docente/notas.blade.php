@@ -1,22 +1,25 @@
 <x-app-layout>
-<div style="display:flex; height:100vh; overflow:hidden;" class="fade-in">
+{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
+{{-- VISTA: DOCENTE - REGISTRO DE NOTAS --}}
+{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
 
-    {{-- ===== SIDEBAR ===== --}}
+<div style="display:flex; height:100vh; overflow:hidden;">
+
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+    {{-- DOCENTE: SIDEBAR --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     <aside style="width:220px; flex-shrink:0; background:#1e293b; border-right:1px solid #334155; display:flex; flex-direction:column; padding:20px 12px; gap:2px;">
-
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #334155;">
-            <img src="{{ asset("images/logo_itm.jpg") }}" alt="ITM Aguilares" style="width:38px; height:38px; border-radius:10px; flex-shrink:0; object-fit:cover;">
+            <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM" style="width:38px; height:38px; border-radius:10px; flex-shrink:0; object-fit:cover;">
             <div>
                 <p style="font-weight:700; font-size:14px; color:#fff;">ITM Aguilares</p>
                 <p style="font-size:11px; color:#64748b;">Sistema Académico</p>
             </div>
         </div>
 
-
-
         <p style="font-size:9px; color:#475569; text-transform:uppercase; letter-spacing:.1em; font-weight:600; padding:10px 8px 3px;">Académico</p>
         <a href="{{ route('docente.notas') }}" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; font-size:13px; font-weight:600; background:rgba(59,130,246,.2); color:#60a5fa; text-decoration:none;">
-            <svg xmlns="images/logo_itm.jpg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             Registro de notas
         </a>
 
@@ -38,16 +41,19 @@
         </div>
     </aside>
 
-    {{-- ===== MAIN ===== --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+    {{-- DOCENTE: CONTENIDO PRINCIPAL --}}
+    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
 
+        {{-- Header --}}
         <header style="background:#1e293b; border-bottom:1px solid #334155; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
             <div style="display:flex; align-items:center; gap:12px;">
                 <div style="width:36px; height:36px; background:#1d4ed8; border-radius:10px; display:flex; align-items:center; justify-content:center;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
                 <div>
-                    <h2 style="font-size:16px; font-weight:700; margin:0;">Panel del Docente</h2>
+                    <h2 style="font-size:16px; font-weight:700; margin:0; color:#e2e8f0;">Panel del Docente</h2>
                     <p style="font-size:12px; color:#64748b; margin:0;">{{ $maestro->nombre_completo }}</p>
                 </div>
             </div>
@@ -56,45 +62,82 @@
 
         <div style="flex:1; overflow-y:auto; padding:24px;">
 
+            {{-- Mensaje de éxito --}}
             @if(session('success'))
             <div style="background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); color:#34d399; padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px;">
                 ✓ {{ session('success') }}
             </div>
             @endif
 
-            {{-- Filtro --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            {{-- DOCENTE: FILTROS (Curso y Materia) --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; padding:18px 20px; margin-bottom:20px;">
-                <h3 style="font-size:14px; font-weight:600; margin:0 0 14px; color:#e2e8f0;">Seleccionar sección y materia</h3>
+                <h3 style="font-size:14px; font-weight:600; margin:0 0 14px; color:#e2e8f0;">Seleccionar curso y materia</h3>
+
+                {{-- Form oculto para submit --}}
                 <form method="GET" action="{{ route('docente.notas') }}" id="filtroForm">
-                    <div style="display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap;">
-                        <div style="display:flex; flex-direction:column; gap:5px; min-width:300px;">
-                            <label style="font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:.06em;">Sección / Materia</label>
-                            <select name="detalle_curso_id"
-                                    style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:9px 12px; color:#fff; font-size:13px; outline:none;"
-                                    onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#334155'"
-                                    onchange="document.getElementById('filtroForm').submit()">
-                                <option value="">-- Seleccionar --</option>
-                                @foreach($cursos as $grupo)
-                                    @foreach($detalleCursos->where('curso_id', $grupo['curso']->id) as $dc)
-                                    <option value="{{ $dc->id }}" {{ $detalleCursoId == $dc->id ? 'selected' : '' }}>
-                                        Sección {{ $grupo['curso']->seccion }} ({{ $grupo['curso']->nivel }}) — {{ $dc->materia->nombre }}
-                                    </option>
-                                    @endforeach
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                    <input type="hidden" name="detalle_curso_id" id="inputDetalleCursoId" value="{{ $detalleCursoId }}">
                 </form>
+
+                <div style="display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap;">
+
+                    {{-- Combobox 1: Curso (solo los asignados al maestro) --}}
+                    <div style="display:flex; flex-direction:column; gap:5px; min-width:220px;">
+                        <label style="font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:.06em;">Curso</label>
+                        <select id="selectCurso"
+                                style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:9px 12px; color:#fff; font-size:13px; outline:none; cursor:pointer;"
+                                onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#334155'"
+                                onchange="filtrarMaterias()">
+                            <option value="">-- Seleccionar curso --</option>
+                            @foreach($cursos as $grupo)
+                            <option value="{{ $grupo['curso']->id }}"
+                                {{ $cursoSeleccionado == $grupo['curso']->id ? 'selected' : '' }}>
+                                Sección {{ $grupo['curso']->seccion }} — {{ $grupo['curso']->nivel }} ({{ $grupo['curso']->anio }})
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Combobox 2: Materia (filtrada por curso) --}}
+                    <div style="display:flex; flex-direction:column; gap:5px; min-width:220px;">
+                        <label style="font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:.06em;">Materia</label>
+                        <select id="selectMateria"
+                                style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:9px 12px; color:#fff; font-size:13px; outline:none; cursor:pointer;"
+                                onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#334155'">
+                            <option value="">-- Primero selecciona un curso --</option>
+                            @foreach($detalleCursos as $dc)
+                            <option value="{{ $dc->id }}"
+                                    data-curso="{{ $dc->curso_id }}"
+                                    {{ $detalleCursoId == $dc->id ? 'selected' : '' }}
+                                    style="display:none;">
+                                {{ $dc->materia->nombre }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Botón buscar --}}
+                    <div>
+                        <button type="button" onclick="submitFiltro()"
+                                style="padding:9px 18px; background:#3b82f6; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:600; cursor:pointer;"
+                                onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                            Buscar
+                        </button>
+                    </div>
+
+                </div>
             </div>
 
-            {{-- Tabla --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+            {{-- DOCENTE: TABLA DE NOTAS --}}
+            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             @if($detalle && $alumnos->count() > 0)
             <form method="POST" action="{{ route('docente.notas.guardar') }}">
                 @csrf
                 <input type="hidden" name="detalle_curso_id" value="{{ $detalleCursoId }}">
 
                 <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; overflow:hidden;">
-
                     <div style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #334155;">
                         <div>
                             <p style="font-size:14px; font-weight:600; color:#e2e8f0; margin:0;">
@@ -106,7 +149,6 @@
                         </div>
                         <button type="submit" style="display:flex; align-items:center; gap:6px; padding:9px 16px; background:#3b82f6; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:600; cursor:pointer;"
                                 onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                             Guardar notas
                         </button>
                     </div>
@@ -115,7 +157,7 @@
                         <table style="width:100%; border-collapse:collapse; font-size:13px;">
                             <thead>
                                 <tr style="background:#0f172a;">
-                                    <th style="padding:10px 16px; text-align:left; color:#475569; font-weight:500; font-size:11px; text-transform:uppercase; width:32px;">#</th>
+                                    <th style="padding:10px 16px; text-align:left; color:#475569; font-weight:500; font-size:11px; text-transform:uppercase;">#</th>
                                     <th style="padding:10px 12px; text-align:left; color:#475569; font-weight:500; font-size:11px; text-transform:uppercase;">Alumno</th>
                                     <th style="padding:10px 8px; text-align:center; color:#a78bfa; font-weight:600; font-size:11px; text-transform:uppercase; width:100px;">Laboratorio</th>
                                     <th style="padding:10px 8px; text-align:center; color:#fbbf24; font-weight:600; font-size:11px; text-transform:uppercase; width:100px;">Ex. Teórico</th>
@@ -142,32 +184,28 @@
                                         </div>
                                     </td>
                                     <td style="padding:7px 8px; text-align:center;">
-                                        <input type="number" name="notas[{{ $alumno->id }}][laboratorio]"
-                                               value="{{ $nota?->laboratorio ?? '' }}"
+                                        <input type="number" name="notas[{{ $alumno->id }}][laboratorio]" value="{{ $nota?->laboratorio ?? '' }}"
                                                min="0" max="10" step="0.1" placeholder="—" class="nota-input"
                                                style="width:68px; text-align:center; background:#0f172a; border:1px solid #334155; border-radius:7px; padding:6px; color:#c4b5fd; font-size:13px; outline:none;"
                                                onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#334155'"
                                                oninput="calcProm(this.closest('tr'))">
                                     </td>
                                     <td style="padding:7px 8px; text-align:center;">
-                                        <input type="number" name="notas[{{ $alumno->id }}][examen_teorico]"
-                                               value="{{ $nota?->examen_teorico ?? '' }}"
+                                        <input type="number" name="notas[{{ $alumno->id }}][examen_teorico]" value="{{ $nota?->examen_teorico ?? '' }}"
                                                min="0" max="10" step="0.1" placeholder="—" class="nota-input"
                                                style="width:68px; text-align:center; background:#0f172a; border:1px solid #334155; border-radius:7px; padding:6px; color:#fcd34d; font-size:13px; outline:none;"
                                                onfocus="this.style.borderColor='#b45309'" onblur="this.style.borderColor='#334155'"
                                                oninput="calcProm(this.closest('tr'))">
                                     </td>
                                     <td style="padding:7px 8px; text-align:center;">
-                                        <input type="number" name="notas[{{ $alumno->id }}][practica]"
-                                               value="{{ $nota?->practica ?? '' }}"
+                                        <input type="number" name="notas[{{ $alumno->id }}][practica]" value="{{ $nota?->practica ?? '' }}"
                                                min="0" max="10" step="0.1" placeholder="—" class="nota-input"
                                                style="width:68px; text-align:center; background:#0f172a; border:1px solid #334155; border-radius:7px; padding:6px; color:#6ee7b7; font-size:13px; outline:none;"
                                                onfocus="this.style.borderColor='#059669'" onblur="this.style.borderColor='#334155'"
                                                oninput="calcProm(this.closest('tr'))">
                                     </td>
                                     <td style="padding:7px 8px; text-align:center;">
-                                        <input type="number" name="notas[{{ $alumno->id }}][sos]"
-                                               value="{{ $nota?->sos ?? '' }}"
+                                        <input type="number" name="notas[{{ $alumno->id }}][sos]" value="{{ $nota?->sos ?? '' }}"
                                                min="0" max="10" step="0.1" placeholder="—" class="nota-input"
                                                style="width:68px; text-align:center; background:#0f172a; border:1px solid #334155; border-radius:7px; padding:6px; color:#fca5a5; font-size:13px; outline:none;"
                                                onfocus="this.style.borderColor='#dc2626'" onblur="this.style.borderColor='#334155'"
@@ -187,10 +225,9 @@
                     </div>
 
                     <div style="padding:12px 20px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid #334155; background:#0f172a;">
-                        <p style="font-size:12px; color:#334155; margin:0;">Promedio = promedio de notas ingresadas · redondeado sin decimales (9.4→9, 9.5→10)</p>
+                        <p style="font-size:12px; color:#334155; margin:0;">Promedio = promedio de notas ingresadas · redondeado a entero</p>
                         <button type="submit" style="display:flex; align-items:center; gap:6px; padding:9px 16px; background:#3b82f6; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:600; cursor:pointer;"
                                 onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
                             Guardar
                         </button>
                     </div>
@@ -202,8 +239,8 @@
                 <div style="width:54px; height:54px; background:#0f172a; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
-                <p style="font-size:15px; font-weight:600; color:#e2e8f0; margin:0 0 6px;">Selecciona un grupo para comenzar</p>
-                <p style="font-size:13px; color:#475569; margin:0;">Elige la sección y materia en el selector de arriba.</p>
+                <p style="font-size:15px; font-weight:600; color:#e2e8f0; margin:0 0 6px;">Selecciona un curso y materia para comenzar</p>
+                <p style="font-size:13px; color:#475569; margin:0;">Elige primero el curso y luego la materia.</p>
             </div>
             @else
             <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; padding:40px; text-align:center;">
@@ -216,12 +253,54 @@
 </div>
 
 <script>
+// Al cargar la página restaurar el estado de los selects
+document.addEventListener('DOMContentLoaded', function () {
+    const cursoId = document.getElementById('selectCurso').value;
+    if (cursoId) mostrarMaterias(cursoId);
+});
+
+function filtrarMaterias() {
+    const cursoId = document.getElementById('selectCurso').value;
+    const selectMateria = document.getElementById('selectMateria');
+
+    // Resetear materia
+    selectMateria.value = '';
+
+    if (!cursoId) {
+        // Ocultar todas las materias
+        selectMateria.querySelectorAll('option[data-curso]').forEach(o => o.style.display = 'none');
+        selectMateria.querySelector('option[value=""]').textContent = '-- Primero selecciona un curso --';
+        return;
+    }
+
+    mostrarMaterias(cursoId);
+}
+
+function mostrarMaterias(cursoId) {
+    const selectMateria = document.getElementById('selectMateria');
+    const options = selectMateria.querySelectorAll('option[data-curso]');
+
+    selectMateria.querySelector('option[value=""]').textContent = '-- Seleccionar materia --';
+
+    options.forEach(opt => {
+        opt.style.display = opt.dataset.curso === cursoId ? '' : 'none';
+    });
+}
+
+function submitFiltro() {
+    const detalleCursoId = document.getElementById('selectMateria').value;
+    if (!detalleCursoId) return;
+    document.getElementById('inputDetalleCursoId').value = detalleCursoId;
+    document.getElementById('filtroForm').submit();
+}
+
 function promColor(p) {
     if (p >= 9) return '#059669';
     if (p >= 7) return '#d97706';
     if (p >= 6) return '#ea580c';
     return '#dc2626';
 }
+
 function calcProm(row) {
     const inputs = row.querySelectorAll('.nota-input');
     const vals = [];
