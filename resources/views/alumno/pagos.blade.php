@@ -10,7 +10,7 @@
     {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     {{-- ALUMNO: CONTENIDO PRINCIPAL --}}
     {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; background:#ffffff;">
 
         <header style="background:#ffffff; border-bottom:1px solid #e5e7eb; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
             <div style="display:flex; align-items:center; gap:12px;">
