@@ -1,15 +1,11 @@
 <x-app-layout>
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
-{{-- VISTA: ALUMNO - DASHBOARD (INICIO) --}}
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
+
 
 <div style="display:flex; height:100vh; overflow:hidden;" class="fade-in">
 
     @include('components.alumno-sidebar', ['active' => 'inicio'])
 
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-    {{-- ALUMNO: CONTENIDO PRINCIPAL --}}
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+
 <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; background:#ffffff;">
 
         <header style="background:#ffffff; border-bottom:1px solid #e5e7eb; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
@@ -37,9 +33,7 @@
             </div>
             @endif
 
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-            {{-- ALUMNO: BANNER DE BIENVENIDA --}}
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+
             <div style="background:#fffbeb; border:1px solid #fcd34d; border-radius:14px; padding:20px 24px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
                 <div>
                     <h3 style="font-size:16px; font-weight:700; color:#b45309; margin:0 0 4px;">Bienvenido, {{ $alumno->nombre }}</h3>
@@ -57,9 +51,7 @@
                 </div>
             </div>
 
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-            {{-- ALUMNO: TARJETAS DE RESUMEN --}}
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+
             <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px;">
                 <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:18px;">
                     <div style="width:34px; height:34px; background:rgba(59,130,246,.1); border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
@@ -84,9 +76,6 @@
                 </div>
             </div>
 
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-            {{-- ALUMNO: ÚLTIMAS NOTAS --}}
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             @if($notas->count() > 0)
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;">
                 <div style="padding:14px 18px; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between;">

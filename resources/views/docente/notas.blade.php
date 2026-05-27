@@ -1,13 +1,9 @@
 <x-app-layout>
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
 {{-- VISTA: DOCENTE - REGISTRO DE NOTAS --}}
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
 
 <div style="display:flex; height:100vh; overflow:hidden;">
 
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     {{-- DOCENTE: SIDEBAR --}}
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     <aside style="width:220px; flex-shrink:0; background:#ffffff; border-right:1px solid #e5e7eb; display:flex; flex-direction:column; padding:20px 12px; gap:2px;">
 
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;">
@@ -34,13 +30,15 @@
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" title="Salir" style="background:none; border:none; cursor:pointer; color:#6b7280; padding:4px;"
+                <button type="button" title="Salir" style="background:none; border:none; cursor:pointer; color:#6b7280; padding:4px;"
+                        onclick="openLogoutModal(this.closest('form'))"
                         onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#6b7280'">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
             </form>
         </div>
     </aside>
+        <x-logout-modal />
 
     {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     {{-- DOCENTE: CONTENIDO PRINCIPAL --}}

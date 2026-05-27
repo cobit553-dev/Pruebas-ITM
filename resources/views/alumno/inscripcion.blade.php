@@ -1,15 +1,11 @@
 <x-app-layout>
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
-{{-- VISTA: ALUMNO - INSCRIPCIÓN --}}
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
+
 
 <div style="display:flex; height:100vh; overflow:hidden;" class="fade-in">
 
     @include('components.alumno-sidebar', ['active' => 'inscripcion'])
 
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-    {{-- ALUMNO: CONTENIDO PRINCIPAL --}}
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
+
 <    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; background:#ffffff;">
 
         <header style="background:#ffffff; border-bottom:1px solid #e5e7eb; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
@@ -37,9 +33,6 @@
             </div>
             @endif
 
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-            {{-- ALUMNO: SECCIÓN INSCRIPCIÓN --}}
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:24px;">
                 <h3 style="font-size:15px; font-weight:600; color:#1f2937; margin:0 0 18px;">Inscripción a sección</h3>
 

@@ -17,34 +17,34 @@ class AdminDashboardController extends Controller
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Usuarios
+    // ADMINISTRADOR: Alumnos
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    public function usuarios()
+    public function alumnos()
     {
-        return view('admin.usuarios');
+        return view('admin.alumnos');
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Cursos
+    // ADMINISTRADOR: Maestros
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    public function cursos()
+    public function maestros()
     {
-        return view('admin.cursos');
+        return view('admin.maestros');
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Docentes
+    // ADMINISTRADOR: Materias
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    public function docentes()
+    public function materias()
     {
-        return view('admin.docentes');
+        return view('admin.materias');
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Reportes
+    // ADMINISTRADOR: Secciones
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    public function reportes()
+    public function secciones()
     {
-        return view('admin.reportes');
+        return view('admin.secciones');
     }
 }
