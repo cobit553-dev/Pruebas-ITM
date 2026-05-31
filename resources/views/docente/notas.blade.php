@@ -89,7 +89,7 @@
                             @foreach($cursos as $grupo)
                             <option value="{{ $grupo['curso']->id }}"
                                 {{ $cursoSeleccionado == $grupo['curso']->id ? 'selected' : '' }}>
-                                Sección {{ $grupo['curso']->seccion }} — {{ $grupo['curso']->nivel }} ({{ $grupo['curso']->anio }})
+                                Curso {{ $grupo['curso']->seccion }} — {{ $grupo['curso']->nivel }} ({{ $grupo['curso']->anio }})
                             </option>
                             @endforeach
                         </select>
@@ -137,7 +137,7 @@
                     <div style="padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #e5e7eb;">
                         <div>
                             <p style="font-size:14px; font-weight:600; color:#1f2937; margin:0;">
-                                Sección {{ $detalle->curso->seccion }}
+                                Curso {{ $detalle->curso->seccion }}
                                 <span style="color:#9ca3af; font-weight:400; margin:0 4px;">·</span>
                                 <span style="color:#3b82f6;">{{ $detalle->materia->nombre }}</span>
                             </p>
@@ -240,7 +240,7 @@
             </div>
             @else
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:40px; text-align:center;">
-                <p style="color:#6b7280; font-size:13px;">No hay alumnos inscritos en esta sección.</p>
+                <p style="color:#6b7280; font-size:13px;">No hay alumnos inscritos en este curso.</p>
             </div>
             @endif
 

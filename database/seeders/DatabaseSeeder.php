@@ -20,20 +20,25 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(['email' => 'admin@itm.com'], [
             'name'     => 'Administrador ITM',
             'password' => Hash::make('password'),
+            'role'     => 'admin',
         ]);
 
         $userDocente1 = User::firstOrCreate(['email' => 'docente@itm.com'], [
             'name'     => 'Carlos Mendoza',
             'password' => Hash::make('password'),
+            'role'     => 'docente',
         ]);
 
         $userDocente2 = User::firstOrCreate(['email' => 'docente2@itm.com'], [
             'name'     => 'Ana López',
             'password' => Hash::make('password'),
+            'role'     => 'docente',
         ]);
-                $userAlumno = User::firstOrCreate(['email' => 'alumno@itm.com'], [
+                
+        $userAlumno = User::firstOrCreate(['email' => 'alumno@itm.com'], [
             'name'     => 'Juan Pérez',
             'password' => Hash::make('password'),
+            'role'     => 'alumno',
         ]);
 
         // ── 2. Maestros ─────────────────────────────────────────────────────
@@ -75,15 +80,14 @@ class DatabaseSeeder extends Seeder
                 ['nombre' => $m['nombre'], 'activa' => true]
             );
         }
-
-        // ── 4. Cursos ────────────────────────────────────────────────────────
-        // Mañana: A, B, C | Tarde: D, F
+// ── 4. Cursos ────────────────────────────────────────────────────────
+        // Matutino: A, B, C | Vespertino: D, F
         $secciones = [
-            ['seccion' => 'A', 'turno' => 'Mañana'],
-            ['seccion' => 'B', 'turno' => 'Mañana'],
-            ['seccion' => 'C', 'turno' => 'Mañana'],
-            ['seccion' => 'D', 'turno' => 'Tarde'],
-            ['seccion' => 'F', 'turno' => 'Tarde'],
+            ['seccion' => 'A', 'turno' => 'Matutino'],
+            ['seccion' => 'B', 'turno' => 'Matutino'],
+            ['seccion' => 'C', 'turno' => 'Matutino'],
+            ['seccion' => 'D', 'turno' => 'Vespertino'],
+            ['seccion' => 'F', 'turno' => 'Vespertino'],
         ];
 
         $cursos = [];

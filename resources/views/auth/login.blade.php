@@ -15,7 +15,7 @@
 
         {{-- Logo --}}
         <div class="w-36 h-36 rounded-full bg-white flex items-center justify-center flex-shrink-0" style="border: 4px solid #f59e0b;">
-            <img src="{{ asset('images/logo_itm.jpg') }}" alt="Logo ITM" class="w-28 h-28 object-contain rounded-full">
+            <img src="{{ asset('images/logo_itm.png') }}" alt="Logo ITM" class="w-28 h-28 object-contain rounded-full">
         </div>
 
         {{-- Nombre institución --}}

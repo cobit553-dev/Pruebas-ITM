@@ -22,7 +22,11 @@ class AlumnoDashboardController extends Controller
      */
     private function getAlumno()
     {
-        return Alumno::where('user_id', Auth::id())->firstOrFail();
+        $alumno = Alumno::where('user_id', Auth::id())->first();
+        if (!$alumno) {
+            abort(403, 'Acceso no autorizado para este rol.');
+        }
+        return $alumno;
     }
 
     /**

@@ -8,20 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('mensualidades', function (Blueprint $table) {
+        Schema::create('mensualidades', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('alumno_id')->constrained('alumnos')->onDelete('cascade');
             $table->integer('mes');
             $table->decimal('monto', 10, 2);
             $table->enum('estado', ['Pendiente', 'Pagado'])->default('Pendiente');
             $table->date('fecha_vencimiento');
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::table('mensualidades', function (Blueprint $table) {
-            $table->dropForeign(['alumno_id']);
-            $table->dropColumn(['alumno_id', 'mes', 'monto', 'estado', 'fecha_vencimiento']);
-        });
+        Schema::dropIfExists('mensualidades');
     }
 };

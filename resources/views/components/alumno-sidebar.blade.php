@@ -1,3 +1,5 @@
+@props(['alumno' => auth()->user(), 'active' => ''])
+
 {{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
 {{-- COMPONENTE: SIDEBAR ALUMNO --}}
 {{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
@@ -63,17 +65,19 @@
     {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
     <div style="margin-top:auto; padding-top:14px; border-top:1px solid #e5e7eb; display:flex; align-items:center; gap:10px;">
         <div style="width:32px; height:32px; border-radius:50%; background:#f59e0b; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0;">
-            {{ strtoupper(substr($alumno->nombre,0,1).substr($alumno->apellido,0,1)) }}
+            {{ strtoupper(substr($alumno->nombre ?? 'U', 0, 1) . substr($alumno->apellido ?? '', 0, 1)) }}
         </div>
         <div style="flex:1; overflow:hidden;">
-            <p style="font-size:13px; font-weight:500; color:#1f2937; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $alumno->nombre_completo }}</p>
-            <p style="font-size:11px; color:#6b7280;">{{ $alumno->codigo }}</p>
+            <p style="font-size:13px; font-weight:500; color:#1f2937; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                {{ ($alumno->nombre ?? '') . ' ' . ($alumno->apellido ?? '') }}
+            </p>
+            <p style="font-size:11px; color:#6b7280;">{{ $alumno->codigo ?? '' }}</p>
         </div>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-                <button type="button" title="Salir" style="background:none; border:none; cursor:pointer; color:#6b7280; padding:4px;"
-                    onclick="openLogoutModal(this.closest('form'))"
-                    onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#6b7280'">
+            <button type="button" title="Salir" style="background:none; border:none; cursor:pointer; color:#6b7280; padding:4px;"
+                onclick="openLogoutModal(this.closest('form'))"
+                onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#6b7280'">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             </button>
         </form>

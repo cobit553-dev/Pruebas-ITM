@@ -6,7 +6,7 @@
 
     {{-- Logo e Institución --}}
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #334155;">
-        <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM Aguilares" style="width:38px; height:38px; border-radius:10px; flex-shrink:0; object-fit:cover;">
+        <img src="{{ asset('images/logo_itm.png') }}" alt="ITM Aguilares" style="width:38px; height:38px; border-radius:10px; flex-shrink:0; object-fit:cover;">
         <div>
             <p style="font-weight:700; font-size:14px; color:#fff;">ITM Aguilares</p>
             <p style="font-size:11px; color:#64748b;">Administración</p>
