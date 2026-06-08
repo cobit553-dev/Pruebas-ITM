@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('encargados', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->string('apellido');
+            $table->string('telefono')->nullable();
+            $table->string('email')->nullable();
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
     }

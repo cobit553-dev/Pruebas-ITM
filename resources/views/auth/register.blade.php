@@ -3,7 +3,7 @@
     <div style="background:#1e293b; border-radius:20px; padding:36px 32px; border:1px solid #334155;">
 
         <div style="text-align:center; margin-bottom:28px;">
-            <img src="{{ asset('images/logo_itm.png') }}" alt="ITM Aguilares" style="width:80px; height:80px; border-radius:14px; margin:0 auto 14px; display:block; object-fit:cover;">
+            <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM Aguilares" style="width:80px; height:80px; border-radius:14px; margin:0 auto 14px; display:block; object-fit:cover;">
             <h1 style="font-size:22px; font-weight:700; color:#10b981; margin:0 0 4px;">ITM Aguilares</h1>
             <p style="font-size:13px; color:#64748b; margin:0;">Crear nueva cuenta</p>
         </div>

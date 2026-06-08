@@ -1,105 +1,140 @@
 <x-app-layout>
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
-{{-- VISTA: ADMINISTRADOR - SECCIONES (TEMA OSCURO) --}}
-{{-- ═══════════════════════════════════════════════════════════════════════════════════════════════ --}}
-
-<div style="display:flex; height:100vh; overflow:hidden;">
+<div class="page-layout admin-sidebar">
 
     @include('components.admin-sidebar', ['active' => 'secciones'])
 
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-    {{-- ADMIN: CONTENIDO PRINCIPAL - SECCIONES --}}
-    {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; background:#0f172a;">
+    <div class="main-content main-content-alt">
 
-        <header style="background:#1e293b; border-bottom:1px solid #334155; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+        <header class="page-header">
             <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:36px; height:36px; background:#ec4899; border-radius:10px; display:flex; align-items:center; justify-content:center;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                <div style="width:40px; height:40px; border-radius:12px; overflow:hidden; border:1px solid #e5e7eb;">
+                    <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div>
-                    <h2 style="font-size:16px; font-weight:700; margin:0; color:#e2e8f0;">Gestión de Secciones</h2>
-                    <p style="font-size:12px; color:#64748b; margin:0;">6 secciones activas</p>
+                    <h2 style="font-size:16px; font-weight:700; margin:0; color:#111827;">Gestión de Secciones</h2>
+                    <p style="font-size:12px; color:#6b7280; margin:0;">{{ $cursos->count() }} secciones activas</p>
                 </div>
             </div>
-            <span style="font-size:12px; color:#475569;">{{ now()->isoFormat('MMMM YYYY') }}</span>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:12px; color:#9ca3af; background:#f3f4f6; padding:6px 12px; border-radius:8px;">{{ now()->isoFormat('MMMM YYYY') }}</span>
+                <button style="background:#111827; border:none; padding:8px 18px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;"
+                    onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
+                    + Nueva Sección
+                </button>
+            </div>
         </header>
 
-        <div style="flex:1; overflow-y:auto; padding:24px;">
+        {{-- Buscador --}}
+        <div style="background:#ffffff; border-bottom:1px solid #e5e7eb; padding:14px 24px; display:flex; align-items:center; gap:12px; flex-shrink:0;">
+            <div style="position:relative; flex:1; max-width:360px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="#9ca3af" stroke-width="2" viewBox="0 0 24 24" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="buscadorCurso" placeholder="Buscar curso..."
+                    autocomplete="off"
+                    style="width:100%; padding:9px 14px 9px 34px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none;"
+                    oninput="filtrarCursos()"
+                    onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
+            </div>
 
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-            {{-- ADMIN: TABLA DE SECCIONES --}}
-            {{-- ───────────────────────────────────────────────────────────────────────────────────────── --}}
-            <div style="background:#1e293b; border:1px solid #334155; border-radius:14px; overflow:hidden;">
-                <div style="padding:18px 24px; border-bottom:1px solid #334155; display:flex; align-items:center; justify-content:space-between;">
-                    <p style="font-size:14px; font-weight:600; color:#e2e8f0; margin:0;">Listado de Secciones</p>
-                    <button style="background:#10b981; border:none; padding:8px 16px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;">
-                        + Nueva Sección
-                    </button>
+            <select id="filtroTurno" onchange="filtrarCursos()"
+                style="padding:9px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; cursor:pointer;">
+                <option value="">Todos los turnos</option>
+                <option value="matutino">Matutino</option>
+                <option value="vespertino">Vespertino</option>
+            </select>
+
+            <p id="contadorCursos" style="font-size:12px; color:#9ca3af; margin:0; white-space:nowrap;"></p>
+
+            <button onclick="limpiarBusqueda()"
+                style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:12px; padding:8px 14px; border-radius:8px; cursor:pointer; white-space:nowrap;"
+                onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
+                ✕ Limpiar
+            </button>
+        </div>
+
+        <div class="content-body">
+
+            <div class="card-grid" id="gridCursos">
+                @foreach($cursos as $curso)
+                @php $porcentaje = $curso->inscripciones_count > 0 ? min(round(($curso->inscripciones_count / 40) * 100), 100) : 0; @endphp
+                <div class="card card-hover card-curso"
+                    data-nombre="{{ strtolower($curso->nombre) }}"
+                    data-turno="{{ strtolower($curso->nivel) }}"
+                    onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#d1d5db'"
+                    onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)'; this.style.borderColor='#e5e7eb'">
+
+                    <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px;">
+                        <div>
+                            <span class="badge-gray">{{ $curso->seccion }}</span>
+                            <p style="font-size:15px; font-weight:700; color:#111827; margin:6px 0 2px;">{{ $curso->nombre }}</p>
+                            <p style="font-size:12px; color:#6b7280; margin:0;">{{ $curso->nivel }} · {{ $curso->anio_lectivo }}</p>
+                        </div>
+                        @if($curso->activo)
+                            <span class="badge-green">Activo</span>
+                        @else
+                            <span style="background:#fef2f2; color:#dc2626; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600;">Inactivo</span>
+                        @endif
+                    </div>
+
+                    <div style="margin-bottom:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <span style="font-size:12px; color:#6b7280; font-weight:500;">Alumnos inscritos</span>
+                            <span style="font-size:12px; font-weight:700; color:#111827;">{{ $curso->inscripciones_count }}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:{{ $porcentaje }}%;"></div>
+                        </div>
+                        <p style="font-size:11px; color:#9ca3af; margin:4px 0 0; text-align:right;">{{ $porcentaje }}% ocupado</p>
+                    </div>
+
+                    <div style="display:flex; gap:8px;">
+                        <a href="{{ route('admin.secciones.edit', $curso->id) }}" class="btn-sm">Editar</a>
+                        <a href="{{ route('admin.secciones.show', $curso->id) }}" class="btn-black">Ver detalle</a>
+                    </div>
                 </div>
+                @endforeach
+            </div>
 
-                <table style="width:100%; border-collapse:collapse;">
-                    <thead>
-                        <tr style="border-bottom:1px solid #334155; background:#162032;">
-                            <th style="padding:12px 24px; text-align:left; font-size:12px; font-weight:600; color:#94a3b8; text-transform:uppercase;">Código</th>
-                            <th style="padding:12px 24px; text-align:left; font-size:12px; font-weight:600; color:#94a3b8; text-transform:uppercase;">Nombre</th>
-                            <th style="padding:12px 24px; text-align:left; font-size:12px; font-weight:600; color:#94a3b8; text-transform:uppercase;">Nivel</th>
-                            <th style="padding:12px 24px; text-align:left; font-size:12px; font-weight:600; color:#94a3b8; text-transform:uppercase;">Estudiantes</th>
-                            <th style="padding:12px 24px; text-align:left; font-size:12px; font-weight:600; color:#94a3b8; text-transform:uppercase;">Capacidad</th>
-                            <th style="padding:12px 24px; text-align:left; font-size:12px; font-weight:600; color:#94a3b8; text-transform:uppercase;">Estado</th>
-                            <th style="padding:12px 24px; text-align:center; font-size:12px; font-weight:600; color:#94a3b8; text-transform:uppercase;">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom:1px solid #0f172a;" onmouseover="this.style.background='#162032'" onmouseout="this.style.background='transparent'">
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">SEC-001</td>
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">Bachillerato A</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">Bachillerato</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">35</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">40</td>
-                            <td style="padding:14px 24px;"><span style="background:rgba(16,185,129,.15); color:#10b981; padding:4px 12px; border-radius:6px; font-size:12px; font-weight:600;">Activo</span></td>
-                            <td style="padding:14px 24px; text-align:center;">
-                                <button style="background:none; border:none; color:#60a5fa; cursor:pointer; font-size:12px; font-weight:600;">Editar</button>
-                            </td>
-                        </tr>
-                        <tr style="border-bottom:1px solid #0f172a;" onmouseover="this.style.background='#162032'" onmouseout="this.style.background='transparent'">
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">SEC-002</td>
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">Bachillerato B</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">Bachillerato</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">32</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">40</td>
-                            <td style="padding:14px 24px;"><span style="background:rgba(16,185,129,.15); color:#10b981; padding:4px 12px; border-radius:6px; font-size:12px; font-weight:600;">Activo</span></td>
-                            <td style="padding:14px 24px; text-align:center;">
-                                <button style="background:none; border:none; color:#60a5fa; cursor:pointer; font-size:12px; font-weight:600;">Editar</button>
-                            </td>
-                        </tr>
-                        <tr style="border-bottom:1px solid #0f172a;" onmouseover="this.style.background='#162032'" onmouseout="this.style.background='transparent'">
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">SEC-003</td>
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">Bachillerato C</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">Bachillerato</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">38</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">40</td>
-                            <td style="padding:14px 24px;"><span style="background:rgba(16,185,129,.15); color:#10b981; padding:4px 12px; border-radius:6px; font-size:12px; font-weight:600;">Activo</span></td>
-                            <td style="padding:14px 24px; text-align:center;">
-                                <button style="background:none; border:none; color:#60a5fa; cursor:pointer; font-size:12px; font-weight:600;">Editar</button>
-                            </td>
-                        </tr>
-                        <tr style="border-bottom:1px solid #0f172a;" onmouseover="this.style.background='#162032'" onmouseout="this.style.background='transparent'">
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">SEC-004</td>
-                            <td style="padding:14px 24px; color:#e2e8f0; font-size:13px;">Básica 7</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">Básica</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">30</td>
-                            <td style="padding:14px 24px; color:#64748b; font-size:13px;">35</td>
-                            <td style="padding:14px 24px;"><span style="background:rgba(16,185,129,.15); color:#10b981; padding:4px 12px; border-radius:6px; font-size:12px; font-weight:600;">Activo</span></td>
-                            <td style="padding:14px 24px; text-align:center;">
-                                <button style="background:none; border:none; color:#60a5fa; cursor:pointer; font-size:12px; font-weight:600;">Editar</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            {{-- Sin resultados --}}
+            <div id="sinResultados" style="display:none; background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:40px; text-align:center; color:#9ca3af; font-size:13px; margin-top:4px;">
+                No se encontraron cursos para tu búsqueda.
             </div>
 
         </div>
     </div>
 </div>
+
+<script>
+function filtrarCursos() {
+    const texto    = document.getElementById('buscadorCurso').value.toLowerCase().trim();
+    const turno    = document.getElementById('filtroTurno').value.toLowerCase();
+    const cards    = document.querySelectorAll('.card-curso');
+    let visibles   = 0;
+
+    cards.forEach(card => {
+        const nombre     = card.dataset.nombre;
+        const turnoCard  = card.dataset.turno;
+        const okNombre   = !texto || nombre.includes(texto);
+        const okTurno    = !turno || turnoCard.includes(turno);
+
+        if (okNombre && okTurno) {
+            card.style.display = '';
+            visibles++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    document.getElementById('sinResultados').style.display = visibles === 0 ? 'block' : 'none';
+
+    const contador = document.getElementById('contadorCursos');
+    contador.textContent = (texto || turno) ? visibles + ' curso(s) encontrado(s)' : '';
+}
+
+function limpiarBusqueda() {
+    document.getElementById('buscadorCurso').value = '';
+    document.getElementById('filtroTurno').value   = '';
+    document.getElementById('contadorCursos').textContent = '';
+    filtrarCursos();
+}
+</script>
 </x-app-layout>

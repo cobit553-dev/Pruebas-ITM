@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Encargado;
+use App\Models\Maestro;
+use App\Models\Materia;
 
 class AdminDashboardController extends Controller
 {
@@ -29,7 +31,9 @@ class AdminDashboardController extends Controller
     // ─────────────────────────────────────────────────────────────────────────────────────────
     public function maestros()
     {
-        return view('admin.maestros');
+        $maestros = Maestro::with('detalleCursos.materia')->get();
+
+        return view('admin.maestros', compact('maestros'));
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────
@@ -37,14 +41,18 @@ class AdminDashboardController extends Controller
     // ─────────────────────────────────────────────────────────────────────────────────────────
     public function materias()
     {
-        return view('admin.materias');
+        $materias = Materia::all();
+
+        return view('admin.materias', compact('materias'));
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Secciones
+    // ADMINISTRADOR: Encargados
     // ─────────────────────────────────────────────────────────────────────────────────────────
-    public function secciones()
+    public function encargados()
     {
-        return view('admin.secciones');
+        $encargados = Encargado::with('alumnos')->get();
+
+        return view('admin.encargados', compact('encargados'));
     }
 }

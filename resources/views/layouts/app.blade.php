@@ -9,7 +9,6 @@
     <link href="https://fonts.bunny.net/css?family=dm-sans:400,500,600,700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        * { font-family: 'DM Sans', sans-serif; }
         .fade-in { animation: fadeIn .25s ease; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
         ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -17,8 +16,31 @@
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     </style>
 </head>
-<body style="background:#0f172a; color:#fff; margin:0;">
+<body class="font-sans" style="background:#0f172a; margin:0;">
     {{ $slot }}
 </body>
 </html>
-
+<style>
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        text-decoration: none;
+        transition: all .15s;
+        cursor: pointer;
+        color: #6b7280;
+        font-weight: 400;
+    }
+    .sidebar-link:hover {
+        background: #f3f4f6;
+        color: #111827;
+    }
+    .sidebar-link.active {
+        background: #111827 !important;
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+</style>
