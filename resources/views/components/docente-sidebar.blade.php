@@ -27,10 +27,10 @@
     {{-- Usuario --}}
     <div style="margin-top:auto; padding-top:14px; border-top:1px solid #e5e7eb; display:flex; align-items:center; gap:10px;">
         <div style="width:32px; height:32px; border-radius:50%; background:#3b82f6; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0;">
-            {{ strtoupper(substr($maestro->nombre,0,1).substr($maestro->apellido,0,1)) }}
+            {{ strtoupper(substr($maestro->nombre ?? 'U',0,1).substr($maestro->apellido ?? 'U',0,1)) }}
         </div>
         <div style="flex:1; overflow:hidden;">
-            <p style="font-size:13px; font-weight:500; color:#1f2937; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;">{{ $maestro->nombre_completo }}</p>
+            <p style="font-size:13px; font-weight:500; color:#1f2937; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;">{{ $maestro->nombre_completo ?? 'Usuario' }}</p>
             <p style="font-size:11px; color:#6b7280; margin:0;">Docente</p>
         </div>
         <form method="POST" action="{{ route('logout') }}">

@@ -1,0 +1,292 @@
+<div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:24px;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:18px;">
+        <div style="width:4px; height:16px; background:#f59e0b; border-radius:2px;"></div>
+        <h3 style="font-size:15px; font-weight:600; color:#1f2937; margin:0;">Solicitud de Inscripción</h3>
+    </div>
+
+    {{-- Pasos --}}
+    <div style="display:flex; gap:0; margin-bottom:28px;">
+        <div style="flex:1; text-align:center;">
+            <div style="width:32px; height:32px; border-radius:50%; background:#111827; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">1</div>
+            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Llena el formulario</p>
+            <p style="font-size:10px; color:#9ca3af; margin:0;">Datos digitales</p>
+        </div>
+        <div style="flex:0; display:flex; align-items:center; padding-bottom:20px;">
+            <div style="width:40px; height:1px; background:#e5e7eb;"></div>
+        </div>
+        <div style="flex:1; text-align:center;">
+            <div style="width:32px; height:32px; border-radius:50%; background:#d1d5db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">2</div>
+            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Firma digital</p>
+            <p style="font-size:10px; color:#9ca3af; margin:0;">Tú y tu encargado</p>
+        </div>
+        <div style="flex:0; display:flex; align-items:center; padding-bottom:20px;">
+            <div style="width:40px; height:1px; background:#e5e7eb;"></div>
+        </div>
+        <div style="flex:1; text-align:center;">
+            <div style="width:32px; height:32px; border-radius:50%; background:#d1d5db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">3</div>
+            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Enviar solicitud</p>
+            <p style="font-size:10px; color:#9ca3af; margin:0;">Admin revisa</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ route('alumno.inscripcion.enviar') }}" id="formInscripcion"
+        style="display:flex; flex-direction:column; gap:20px;">
+        @csrf
+
+        {{-- SECCIÓN 1: Datos del alumno (pre-llenados) --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">Datos del Alumno</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Nombre completo</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->nombre }} {{ $alumno->apellido }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Código / Matrícula</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827; font-family:monospace;">
+                        {{ $alumno->codigo }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Fecha de nacimiento</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->fecha_nacimiento ? \Carbon\Carbon::parse($alumno->fecha_nacimiento)->isoFormat('D [de] MMMM [de] YYYY') : '—' }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Sexo</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->genero === 'M' ? 'Masculino' : ($alumno->genero === 'F' ? 'Femenino' : '—') }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Teléfono</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->telefono ?? '—' }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Dirección</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->direccion ?? '—' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- SECCIÓN 2: Datos del encargado --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">Datos del Encargado</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Nombre completo <span style="color:#dc2626;">*</span></label>
+                    <input type="text" name="encargado_nombre" required placeholder="Nombre y apellido del encargado"
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Teléfono del encargado</label>
+                    <input type="text" name="encargado_telefono" placeholder="Ej: 7777-8888"
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Parentesco <span style="color:#dc2626;">*</span></label>
+                    <select name="encargado_parentesco" required
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box; cursor:pointer;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                        <option value="">Seleccionar...</option>
+                        <option value="Padre">Padre</option>
+                        <option value="Madre">Madre</option>
+                        <option value="Tutor">Tutor</option>
+                        <option value="Abuelo/a">Abuelo/a</option>
+                        <option value="Tío/a">Tío/a</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">DUI del encargado</label>
+                    <input type="text" name="encargado_dui" placeholder="Ej: 00000000-0"
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+            </div>
+        </div>
+
+        {{-- SECCIÓN 3: Selección de curso --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">Selección de Sección</p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px;">
+                @foreach($cursosDisponibles as $curso)
+                <label style="cursor:pointer;">
+                    <input type="radio" name="curso_id" value="{{ $curso->id }}" style="display:none;" class="curso-radio" required>
+                    <div class="curso-card" style="background:#ffffff; border:2px solid #e5e7eb; border-radius:10px; padding:14px; text-align:center; transition:all .15s;">
+                        <p style="font-size:18px; font-weight:700; color:#111827; margin:0 0 2px;">{{ $curso->seccion }}</p>
+                        <p style="font-size:12px; font-weight:500; color:#374151; margin:0 0 2px;">{{ $curso->nombre }}</p>
+                        <p style="font-size:11px; color:#6b7280; margin:0;">{{ $curso->nivel }}</p>
+                    </div>
+                </label>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- SECCIÓN 4: Firmas digitales --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 6px;">Firmas Digitales</p>
+            <p style="font-size:12px; color:#6b7280; margin:0 0 16px;">Dibuja tu firma y la firma del encargado usando el mouse o el dedo en pantalla táctil.</p>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+                {{-- Firma del alumno --}}
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">Firma del Alumno <span style="color:#dc2626;">*</span></label>
+                    <canvas id="firmaAlumno" width="300" height="120"
+                        style="width:100%; height:120px; border:2px solid #e5e7eb; border-radius:10px; background:#ffffff; cursor:crosshair; touch-action:none;">
+                    </canvas>
+                    <input type="hidden" name="firma_alumno" id="firmaAlumnoData">
+                    <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+                        <button type="button" onclick="limpiarFirma('firmaAlumno', 'firmaAlumnoData')"
+                            style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:11px; padding:4px 10px; border-radius:6px; cursor:pointer;">
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Firma del encargado --}}
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">Firma del Encargado <span style="color:#dc2626;">*</span></label>
+                    <canvas id="firmaEncargado" width="300" height="120"
+                        style="width:100%; height:120px; border:2px solid #e5e7eb; border-radius:10px; background:#ffffff; cursor:crosshair; touch-action:none;">
+                    </canvas>
+                    <input type="hidden" name="firma_encargado" id="firmaEncargadoData">
+                    <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+                        <button type="button" onclick="limpiarFirma('firmaEncargado', 'firmaEncargadoData')"
+                            style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:11px; padding:4px 10px; border-radius:6px; cursor:pointer;">
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Botón enviar --}}
+        <div>
+            <button type="button" onclick="enviarSolicitud()"
+                style="padding:12px 28px; background:#f59e0b; border:none; border-radius:10px; color:#fff; font-size:14px; font-weight:700; cursor:pointer;"
+                onmouseover="this.style.background='#d97706'" onmouseout="this.style.background='#f59e0b'">
+                Enviar solicitud de inscripción
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// ── Firma digital ────────────────────────────────────────────
+function initFirma(canvasId, dataId) {
+    const canvas  = document.getElementById(canvasId);
+    const ctx     = canvas.getContext('2d');
+    const input   = document.getElementById(dataId);
+    let dibujando = false;
+
+    ctx.strokeStyle = '#111827';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+
+    function getPosicion(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        if (e.touches) {
+            return {
+                x: (e.touches[0].clientX - rect.left) * scaleX,
+                y: (e.touches[0].clientY - rect.top)  * scaleY
+            };
+        }
+        return {
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top)  * scaleY
+        };
+    }
+
+    function iniciar(e) {
+        e.preventDefault();
+        dibujando = true;
+        const pos = getPosicion(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        canvas.style.borderColor = '#f59e0b';
+    }
+
+    function dibujar(e) {
+        if (!dibujando) return;
+        e.preventDefault();
+        const pos = getPosicion(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        input.value = canvas.toDataURL();
+    }
+
+    function terminar(e) {
+        if (!dibujando) return;
+        dibujando = false;
+        input.value = canvas.toDataURL();
+    }
+
+    canvas.addEventListener('mousedown',  iniciar);
+    canvas.addEventListener('mousemove',  dibujar);
+    canvas.addEventListener('mouseup',    terminar);
+    canvas.addEventListener('mouseleave', terminar);
+    canvas.addEventListener('touchstart', iniciar,   { passive: false });
+    canvas.addEventListener('touchmove',  dibujar,   { passive: false });
+    canvas.addEventListener('touchend',   terminar);
+}
+
+function limpiarFirma(canvasId, dataId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx    = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById(dataId).value = '';
+    canvas.style.borderColor = '#e5e7eb';
+}
+
+function enviarSolicitud() {
+    const firmaA = document.getElementById('firmaAlumnoData').value;
+    const firmaE = document.getElementById('firmaEncargadoData').value;
+    const curso  = document.querySelector('.curso-radio:checked');
+
+    if (!firmaA) {
+        alert('Por favor dibuja tu firma.');
+        return;
+    }
+    if (!firmaE) {
+        alert('Por favor dibuja la firma del encargado.');
+        return;
+    }
+    if (!curso) {
+        alert('Por favor selecciona una sección.');
+        return;
+    }
+
+    document.getElementById('formInscripcion').submit();
+}
+
+// ── Selección de curso ───────────────────────────────────────
+document.querySelectorAll('.curso-radio').forEach(radio => {
+    radio.addEventListener('change', () => {
+        document.querySelectorAll('.curso-card').forEach(c => {
+            c.style.borderColor = '#e5e7eb';
+            c.style.background  = '#ffffff';
+        });
+        radio.nextElementSibling.style.borderColor = '#f59e0b';
+        radio.nextElementSibling.style.background  = '#fefce8';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    initFirma('firmaAlumno',   'firmaAlumnoData');
+    initFirma('firmaEncargado', 'firmaEncargadoData');
+});
+</script>

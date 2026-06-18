@@ -13,18 +13,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ADMINISTRADOR: Alumnos
     Route::get('/admin/alumnos', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'alumnos'])
         ->name('admin.alumnos');
+    Route::post('/admin/alumnos', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'storeAlumno'])
+        ->name('admin.alumnos.store');
 
     // ADMINISTRADOR: Maestros
     Route::get('/admin/maestros', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'maestros'])
         ->name('admin.maestros');
 
+    Route::post('/admin/maestros', [\App\Http\Controllers\Admin\MaestroController::class, 'store'])
+        ->name('admin.maestros.store');
+
     // ADMINISTRADOR: Materias
     Route::get('/admin/materias', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'materias'])
         ->name('admin.materias');
+    Route::post('/admin/materias', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'storeMateria'])
+        ->name('admin.materias.store');
 
     // ADMINISTRADOR: Secciones
     Route::get('/admin/secciones', [\App\Http\Controllers\Admin\SeccionController::class, 'index'])
         ->name('admin.secciones');
+
+    Route::post('/admin/secciones', [\App\Http\Controllers\Admin\SeccionController::class, 'store'])
+        ->name('admin.secciones.store');
 
     Route::get('/admin/secciones/{id}', [\App\Http\Controllers\Admin\SeccionController::class, 'show'])
         ->name('admin.secciones.show');
@@ -38,6 +48,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ADMINISTRADOR: Encargados
     Route::get('/admin/encargados', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'encargados'])
         ->name('admin.encargados');
+        Route::post('/encargados', [\App\Http\Controllers\Admin\EncargadoController::class, 'store'])->name('admin.encargados.store');
+    Route::put('/encargados/{id}', [\App\Http\Controllers\Admin\EncargadoController::class, 'update'])->name('admin.encargados.update');
+    Route::delete('/encargados/{id}', [\App\Http\Controllers\Admin\EncargadoController::class, 'destroy'])->name('admin.encargados.destroy');
 
     // ADMINISTRADOR: Inscripciones
     Route::get('/admin/inscripciones', [\App\Http\Controllers\Admin\InscripcionController::class, 'index'])
@@ -56,18 +69,37 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.boletas');
     Route::get('/admin/boletas/{alumno_id}', [\App\Http\Controllers\Admin\BoletaController::class, 'show'])
         ->name('admin.boletas.show');
+    Route::get('/boletas/{id}/pdf', [\App\Http\Controllers\Admin\BoletaController::class, 'generarPdf'])->name('admin.boletas.pdf');
 
     // ADMINISTRADOR: Mensualidades
     Route::get('/admin/mensualidades', [\App\Http\Controllers\Admin\MensualidadController::class, 'index'])
         ->name('admin.mensualidades');
+    Route::get('/mensualidades', [\App\Http\Controllers\Admin\MensualidadController::class, 'index'])->name('admin.mensualidades');
+    Route::post('/mensualidades/generar', [\App\Http\Controllers\Admin\MensualidadController::class, 'generar'])->name('admin.mensualidades.generar');
+    Route::post('/mensualidades/{id}/pagar', [\App\Http\Controllers\Admin\MensualidadController::class, 'pagar'])->name('admin.mensualidades.pagar');
+    Route::post('/mensualidades/{id}/revertir', [\App\Http\Controllers\Admin\MensualidadController::class, 'revertir'])->name('admin.mensualidades.revertir');
 
     // ADMINISTRADOR: Pagos
     Route::get('/admin/pagos', [\App\Http\Controllers\Admin\PagoController::class, 'index'])
         ->name('admin.pagos');
 
-    Route::get('/maestros', [\App\Http\Controllers\Admin\MaestroController::class, 'index'])->name('admin.maestros');
-    Route::get('/maestros/{id}', [\App\Http\Controllers\Admin\MaestroController::class, 'show'])->name('admin.maestros.show');
-    Route::post('/maestros/{id}/asignar', [\App\Http\Controllers\Admin\MaestroController::class, 'asignar'])->name('admin.maestros.asignar');
-    Route::delete('/maestros/{maestro_id}/desasignar/{detalle_id}', [\App\Http\Controllers\Admin\MaestroController::class, 'desasignar'])->name('admin.maestros.desasignar');
+    Route::get('/admin/maestros/{id}', [\App\Http\Controllers\Admin\MaestroController::class, 'show'])
+        ->name('admin.maestros.show');
+
+    Route::post('/admin/maestros/{id}/asignar', [\App\Http\Controllers\Admin\MaestroController::class, 'asignar'])
+        ->name('admin.maestros.asignar');
+
+    Route::delete('/admin/maestros/{maestro_id}/desasignar/{detalle_id}', [\App\Http\Controllers\Admin\MaestroController::class, 'desasignar'])
+        ->name('admin.maestros.desasignar');
+
+    Route::delete('/inscripciones/{id}', [\App\Http\Controllers\Admin\InscripcionController::class, 'desactivar'])->name('admin.inscripciones.desactivar');
+
+    Route::get('/admin/solicitudes', [App\Http\Controllers\Admin\InscripcionController::class, 'solicitudes'])->name('admin.solicitudes');
+    Route::post('/admin/solicitudes/{id}/aprobar', [App\Http\Controllers\Admin\InscripcionController::class, 'aprobar'])->name('admin.solicitudes.aprobar');
+    Route::post('/admin/solicitudes/{id}/rechazar', [App\Http\Controllers\Admin\InscripcionController::class, 'rechazar'])->name('admin.solicitudes.rechazar');
+
+    Route::put('/alumnos/{id}', [App\Http\Controllers\Admin\AdminDashboardController::class, 'updateAlumno'])->name('admin.alumnos.update');
+
+
 
 });

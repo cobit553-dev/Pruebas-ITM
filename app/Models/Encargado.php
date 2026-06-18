@@ -10,7 +10,9 @@ class Encargado extends Model
         'nombre',
         'apellido',
         'telefono',
+        'dui',
         'email',
+        'parentesco',
         'activo',
     ];
 

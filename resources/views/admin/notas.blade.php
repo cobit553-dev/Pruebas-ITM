@@ -73,7 +73,7 @@
 
                 </div>
 
-                <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between;">
+                <div style="margin-top:12px; display:flex; flex-wrap:wrap; align-items:center; gap:10px; justify-content:space-between;">
                     <p id="textoResultados" style="font-size:12px; color:#9ca3af; margin:0;"></p>
                     <button onclick="limpiarFiltros()"
                         style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:12px; padding:6px 14px; border-radius:8px; cursor:pointer;"
@@ -107,8 +107,8 @@
                                 <th style="padding:11px 20px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Lab.</th>
                                 <th style="padding:11px 20px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Teórico</th>
                                 <th style="padding:11px 20px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Práctico</th>
-                                <th style="padding:11px 20px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">SOS</th>
                                 <th style="padding:11px 20px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Promedio</th>
+                                <th style="padding:11px 20px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Conducta</th>
                             </tr>
                         </thead>
                         <tbody class="tbody-notas">
@@ -129,7 +129,6 @@
                                 <td style="padding:12px 20px; text-align:center; font-size:13px; color:#374151;">{{ $nota->laboratorio ?? '—' }}</td>
                                 <td style="padding:12px 20px; text-align:center; font-size:13px; color:#374151;">{{ $nota->examen_teorico ?? '—' }}</td>
                                 <td style="padding:12px 20px; text-align:center; font-size:13px; color:#374151;">{{ $nota->practica ?? '—' }}</td>
-                                <td style="padding:12px 20px; text-align:center; font-size:13px; color:#374151;">{{ $nota->sos ?? '—' }}</td>
                                 <td style="padding:12px 20px; text-align:center;">
                                     @php $p = $nota->promedio; @endphp
                                     <span style="width:32px; height:32px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff;
@@ -137,6 +136,7 @@
                                         {{ $p ?? '—' }}
                                     </span>
                                 </td>
+                                <td style="padding:12px 20px; text-align:center; font-size:13px; color:#374151;">{{ $nota->conducta ?? '—' }}</td>
                             </tr>
                             @empty
                             <tr class="fila-vacia">

@@ -17,7 +17,8 @@
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
                 <span style="font-size:12px; color:#9ca3af; background:#f3f4f6; padding:6px 12px; border-radius:8px;">{{ now()->isoFormat('MMMM YYYY') }}</span>
-                <button style="background:#111827; border:none; padding:8px 18px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;"
+                <button onclick="abrirModalMaestro()"
+                    style="background:#111827; border:none; padding:8px 18px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;"
                     onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
                     + Nuevo Maestro
                 </button>
@@ -155,5 +156,25 @@ function limpiarBusqueda() {
     document.getElementById('contadorMaestros').textContent = '';
     filtrarMaestros();
 }
+</script>
+
+@include('admin.partials.modal-nuevo-maestro')
+
+<script>
+function abrirModalMaestro() {
+    document.getElementById('modalNuevoMaestro').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalMaestro() {
+    document.getElementById('modalNuevoMaestro').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('modalNuevoMaestro').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModalMaestro();
+    });
+});
 </script>
 </x-app-layout>

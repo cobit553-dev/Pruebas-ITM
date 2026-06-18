@@ -14,6 +14,27 @@ class SeccionController extends Controller
         return view('admin.secciones', compact('cursos'));
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'seccion' => 'required|string|max:2',
+            'nivel' => 'required|string|in:Matutino,Vespertino',
+            'anio_lectivo' => 'required|integer|min:2020|max:2099',
+            'activo' => 'sometimes|boolean',
+        ]);
+
+        Curso::create([
+            'nombre' => $request->nombre,
+            'seccion' => strtoupper($request->seccion),
+            'nivel' => $request->nivel,
+            'anio_lectivo' => $request->anio_lectivo,
+            'activo' => $request->filled('activo') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.secciones')->with('success', 'Sección registrada correctamente.');
+    }
+
     public function show($id)
     {
         $curso = Curso::with([

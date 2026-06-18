@@ -41,15 +41,16 @@ function promColor(int $p): string {
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:18px 20px; margin-bottom:20px;">
                 <h3 style="font-size:14px; font-weight:600; margin:0 0 14px; color:#1f2937;">Seleccionar curso y materia</h3>
 
-                <form method="GET" action="{{ route('docente.notas') }}" id="filtroForm">
-                    <input type="hidden" name="detalle_curso_id" id="inputDetalleCursoId" value="{{ $detalleCursoId }}">
-                </form>
+<div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:18px 20px; margin-bottom:20px;">
+                <h3 style="font-size:14px; font-weight:600; margin:0 0 14px; color:#1f2937;">Seleccionar curso y materia</h3>
 
-                <div style="display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap;">
-                    <div style="display:flex; flex-direction:column; gap:5px; min-width:220px;">
+                <form method="GET" action="{{ route('docente.notas') }}" id="filtroForm" style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
+                    <input type="hidden" name="detalle_curso_id" id="inputDetalleCursoId" value="{{ $detalleCursoId }}">
+
+                    <div style="display:flex; flex-direction:column; gap:5px; flex:1 1 200px; min-width:180px;">
                         <label style="font-size:11px; color:#6b7280; text-transform:uppercase; letter-spacing:.06em;">Curso</label>
                         <select id="selectCurso"
-                                style="background:#ffffff; border:1px solid #d1d5db; border-radius:8px; padding:9px 12px; color:#1f2937; font-size:13px; outline:none; cursor:pointer;"
+                                style="background:#ffffff; border:1px solid #d1d5db; border-radius:8px; padding:9px 12px; color:#1f2937; font-size:13px; outline:none; cursor:pointer; width:100%;"
                                 onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'"
                                 onchange="filtrarMaterias()">
                             <option value="">-- Seleccionar curso --</option>
@@ -62,10 +63,10 @@ function promColor(int $p): string {
                         </select>
                     </div>
 
-                    <div style="display:flex; flex-direction:column; gap:5px; min-width:220px;">
+                    <div style="display:flex; flex-direction:column; gap:5px; flex:1 1 200px; min-width:180px;">
                         <label style="font-size:11px; color:#6b7280; text-transform:uppercase; letter-spacing:.06em;">Materia</label>
                         <select id="selectMateria"
-                                style="background:#ffffff; border:1px solid #d1d5db; border-radius:8px; padding:9px 12px; color:#1f2937; font-size:13px; outline:none; cursor:pointer;"
+                                style="background:#ffffff; border:1px solid #d1d5db; border-radius:8px; padding:9px 12px; color:#1f2937; font-size:13px; outline:none; cursor:pointer; width:100%;"
                                 onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#d1d5db'">
                             <option value="">-- Primero selecciona un curso --</option>
                             @foreach($detalleCursos as $dc)
@@ -79,14 +80,13 @@ function promColor(int $p): string {
                         </select>
                     </div>
 
-                    <div>
-                        <button type="button" onclick="submitFiltro()"
-                                style="padding:9px 18px; background:#3b82f6; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:600; cursor:pointer;"
-                                onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
-                            Buscar
-                        </button>
-                    </div>
-                </div>
+                    <button type="button" onclick="submitFiltro()"
+                            style="padding:9px 18px; background:#3b82f6; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                            onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                        Buscar
+                    </button>
+                </form>
+            </div>
             </div>
 
             @if($detalle && $alumnos->count() > 0)
@@ -121,6 +121,7 @@ function promColor(int $p): string {
                                     <th style="padding:10px 8px; text-align:center; color:#f59e0b; font-weight:600; font-size:11px; text-transform:uppercase; width:100px;">Ex. Teórico</th>
                                     <th style="padding:10px 8px; text-align:center; color:#10b981; font-weight:600; font-size:11px; text-transform:uppercase; width:100px;">Práctica</th>
                                     <th style="padding:10px 8px; text-align:center; color:#1f2937; font-weight:700; font-size:11px; text-transform:uppercase; width:70px;">Promedio</th>
+                                    <th style="padding:10px 8px; text-align:center; color:#ef4444; font-weight:600; font-size:11px; text-transform:uppercase; width:100px;">Conducta</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -167,6 +168,17 @@ function promColor(int $p): string {
                                               {{ $nota?->promedio !== null ? 'background:'.promColor($nota->promedio).'; color:#fff;' : 'background:#f3f4f6; color:#9ca3af;' }}">
                                             {{ $nota?->promedio ?? '—' }}
                                         </span>
+                                    </td>
+                                    <td style="padding:7px 8px; text-align:center;">
+                                        <select name="notas[{{ $alumno->id }}][conducta]"
+                                                class="nota-input"
+                                                style="width:90px; text-align:center; background:#ffffff; border:1px solid #d1d5db; border-radius:7px; padding:6px; color:#ef4444; font-size:13px; outline:none;"
+                                                onfocus="this.style.borderColor='#ef4444'" onblur="this.style.borderColor='#d1d5db'">
+                                            <option value="">—</option>
+                                            <option value="B" {{ $nota?->conducta === 'B' ? 'selected' : '' }}>B</option>
+                                            <option value="MB" {{ $nota?->conducta === 'MB' ? 'selected' : '' }}>MB</option>
+                                            <option value="E" {{ $nota?->conducta === 'E' ? 'selected' : '' }}>E</option>
+                                        </select>
                                     </td>
                                 </tr>
                                 @endforeach

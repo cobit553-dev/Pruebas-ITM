@@ -18,10 +18,10 @@
         </header>
 
         {{-- Buscadores --}}
-        <div style="background:#ffffff; border-bottom:1px solid #e5e7eb; padding:14px 24px; display:flex; align-items:center; gap:12px; flex-shrink:0;">
+        <div style="background:#ffffff; border-bottom:1px solid #e5e7eb; padding:14px 24px; display:flex; align-items:center; gap:12px; flex-shrink:0; flex-wrap:wrap;">
 
             {{-- Buscador curso con dropdown --}}
-            <div style="position:relative; min-width:280px;">
+            <div style="position:relative; min-width:260px; flex:1 1 260px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="#9ca3af" stroke-width="2" viewBox="0 0 24 24" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none; z-index:1;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="text" id="buscadorCurso" placeholder="Buscar o seleccionar curso..."
                     autocomplete="off"
@@ -47,7 +47,7 @@
             </div>
 
             {{-- Buscador alumno --}}
-            <div style="position:relative; flex:1; max-width:300px;">
+            <div style="position:relative; flex:1 1 220px; max-width:300px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="#9ca3af" stroke-width="2" viewBox="0 0 24 24" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="text" id="buscadorAlumno" placeholder="Buscar alumno..."
                     style="width:100%; padding:9px 14px 9px 34px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none;"

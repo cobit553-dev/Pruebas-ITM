@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ITM Aguilares — {{ config('app.name', 'Sistema Académico') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo_itm.jpg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo_itm.jpg') }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=dm-sans:400,500,600,700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -14,10 +16,25 @@
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #1e293b; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    </style>
+</style>
 </head>
 <body class="font-sans" style="background:#0f172a; margin:0;">
     {{ $slot }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar.sidebar-scroll') || document.querySelector('aside[style*="overflow-y:auto"]');
+            if (sidebar) {
+                const scrollKey = 'sidebarScrollPosition';
+                const savedScroll = localStorage.getItem(scrollKey);
+                if (savedScroll) {
+                    sidebar.scrollTop = parseInt(savedScroll);
+                }
+                sidebar.addEventListener('scroll', function() {
+                    localStorage.setItem(scrollKey, this.scrollTop);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 <style>

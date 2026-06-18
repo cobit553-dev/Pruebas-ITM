@@ -17,7 +17,9 @@
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
                 <span style="font-size:12px; color:#9ca3af; background:#f3f4f6; padding:6px 12px; border-radius:8px;">{{ now()->isoFormat('MMMM YYYY') }}</span>
-                <button style="background:#111827; border:none; padding:8px 18px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;"
+                {{-- Botón conectado al modal nueva materia --}}
+                <button onclick="abrirModalMateria()"
+                    style="background:#111827; border:none; padding:8px 18px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;"
                     onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
                     + Nueva Materia
                 </button>
@@ -78,7 +80,6 @@
                                 @endif
                             </td>
                             <td style="padding:13px 24px; text-align:center;">
-                                {{-- Botón Editar con datos de la materia --}}
                                 <button
                                     onclick="abrirModal(
                                         {{ $materia->id }},
@@ -109,76 +110,36 @@
         </div>
     </div>
 </div>
+{{-- Modal editar materia desde archivo separado --}}
+@include('admin.partials.modal-editar-materia')
 
-{{-- ═══════════════════════════════════════════════════════════ --}}
-{{-- MODAL: EDITAR MATERIA --}}
-{{-- ═══════════════════════════════════════════════════════════ --}}
-<div id="modalEditar" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; align-items:center; justify-content:center;">
-    <div style="background:#ffffff; border-radius:16px; padding:28px; width:100%; max-width:440px; box-shadow:0 8px 32px rgba(0,0,0,0.12); margin:20px;">
-
-        {{-- Header modal --}}
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <div style="width:4px; height:16px; background:#111827; border-radius:2px;"></div>
-                <p style="font-size:15px; font-weight:700; color:#111827; margin:0;">Editar Materia</p>
-            </div>
-            <button onclick="cerrarModal()"
-                style="background:#f3f4f6; border:none; width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:14px; color:#6b7280; display:flex; align-items:center; justify-content:center;"
-                onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">✕</button>
-        </div>
-
-        {{-- Campos --}}
-        <div style="display:flex; flex-direction:column; gap:16px;">
-
-            {{-- ID oculto --}}
-            <input type="hidden" id="modalId">
-
-            {{-- Código (solo lectura) --}}
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Código</label>
-                <input type="text" id="modalCodigo" readonly
-                    style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f3f4f6; color:#9ca3af; outline:none; cursor:not-allowed; box-sizing:border-box;">
-                <p style="font-size:11px; color:#9ca3af; margin:4px 0 0;">El código no se puede modificar.</p>
-            </div>
-
-            {{-- Nombre --}}
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Nombre de la materia</label>
-                <input type="text" id="modalNombre"
-                    style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
-                    onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
-            </div>
-
-            {{-- Estado --}}
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Estado</label>
-                <select id="modalEstado"
-                    style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; cursor:pointer; box-sizing:border-box;"
-                    onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
-                    <option value="1">Activa</option>
-                    <option value="0">Inactiva</option>
-                </select>
-            </div>
-
-        </div>
-
-        {{-- Botones --}}
-        <div style="display:flex; gap:10px; margin-top:24px;">
-            <button onclick="cerrarModal()"
-                style="flex:1; padding:10px; background:#f3f4f6; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#374151; cursor:pointer;"
-                onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
-                Cancelar
-            </button>
-            <button onclick="guardarMateria()"
-                style="flex:1; padding:10px; background:#111827; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#ffffff; cursor:pointer;"
-                onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
-                Guardar cambios
-            </button>
-        </div>
-    </div>
-</div>
+{{-- Modal nueva materia desde archivo separado --}}
+@include('admin.partials.modal-nueva-materia')
 
 <script>
+// ── Modal Nueva Materia ──────────────────────────
+function abrirModalMateria() {
+    document.getElementById('modalNuevaMateria').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalMateria() {
+    document.getElementById('modalNuevaMateria').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('modalNuevaMateria').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModalMateria();
+    });
+
+    // ── Modal Editar Materia ──────────────────────
+    document.getElementById('modalEditar').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModal();
+    });
+});
+
+// ── Modal Editar ────────────────────────────────
 function abrirModal(id, codigo, nombre, activa) {
     document.getElementById('modalId').value     = id;
     document.getElementById('modalCodigo').value = codigo;
@@ -194,26 +155,19 @@ function cerrarModal() {
 }
 
 function guardarMateria() {
-    // Por ahora solo cierra
-    // Cuando quieras guardar de verdad dímelo
     cerrarModal();
 }
 
+// ── Buscador ────────────────────────────────────
 function filtrarMaterias() {
     const texto  = document.getElementById('buscadorMateria').value.toLowerCase().trim();
     const filas  = document.querySelectorAll('.fila-materia');
     let visibles = 0;
-
     filas.forEach(fila => {
         const nombre = fila.dataset.nombre;
-        if (!texto || nombre.includes(texto)) {
-            fila.style.display = '';
-            visibles++;
-        } else {
-            fila.style.display = 'none';
-        }
+        if (!texto || nombre.includes(texto)) { fila.style.display = ''; visibles++; }
+        else { fila.style.display = 'none'; }
     });
-
     document.getElementById('sinResultados').style.display = visibles === 0 && texto ? 'block' : 'none';
     document.getElementById('contadorMaterias').textContent = texto ? visibles + ' resultado(s)' : '';
 }
@@ -223,10 +177,5 @@ function limpiarBusqueda() {
     document.getElementById('contadorMaterias').textContent = '';
     filtrarMaterias();
 }
-
-// Cerrar al hacer clic fuera del modal
-document.getElementById('modalEditar').addEventListener('click', function(e) {
-    if (e.target === this) cerrarModal();
-});
 </script>
 </x-app-layout>

@@ -29,8 +29,42 @@
   gap: 2px;
 }
 
+@media (max-width: 640px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    padding: 12px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .sidebar .sidebar-brand {
+    display: none;
+  }
+  .sidebar .sidebar-section-label {
+    display: none;
+  }
+  .sidebar .sidebar-link {
+    padding: 8px;
+    white-space: nowrap;
+  }
+  .sidebar .sidebar-user {
+    display: none;
+  }
+}
+
 .sidebar-scroll {
   overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .sidebar-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
 }
 
 .main-content {
@@ -39,6 +73,12 @@
   flex-direction: column;
   overflow: hidden;
   background: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .main-content {
+    overflow-x: hidden;
+  }
 }
 
 .main-content-alt {
@@ -59,6 +99,18 @@
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  .page-header > div {
+    gap: 8px;
+  }
 }
 
 /* ── Sidebar elements ── */
@@ -115,6 +167,13 @@
   font-weight: 600;
 }
 
+@media (max-width: 640px) {
+  .sidebar-link-active {
+    background: #111827 !important;
+    color: #ffffff !important;
+  }
+}
+
 .sidebar-user {
   margin-top: auto;
   padding-top: 14px;
@@ -122,6 +181,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .sidebar-user {
+    display: none;
+  }
 }
 
 .sidebar-avatar {
@@ -189,10 +254,22 @@
   gap: 16px;
 }
 
+@media (max-width: 640px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .card-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .card-grid-2 {
+    grid-template-columns: 1fr;
+  }
 }
 
 .card-grid-3 {
@@ -201,10 +278,34 @@
   gap: 14px;
 }
 
+@media (max-width: 1024px) {
+  .card-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .card-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
 .card-grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
+}
+
+@media (max-width: 1024px) {
+  .card-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .card-grid-4 {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Stat card ── */
@@ -564,4 +665,225 @@
   font-weight: 600;
   margin: 0 0 14px;
   color: #1f2937;
+}
+
+/* ===================================================
+   RESPONSIVE MOBILE — TELÉFONOS
+   =================================================== */
+@media (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .page-layout,
+  div[style*="height:100vh"][style*="overflow:hidden"],
+  div[style*="height:100vh"] {
+    display: block !important;
+    height: 100vh !important;
+    overflow: auto !important;
+  }
+
+  .sidebar,
+  div[style*="height:100vh"] > aside,
+  div[style*="height:100vh"] > .sidebar,
+  div[style*="height:100vh"] > div[style*="flex:1"] > aside {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 12px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+
+  .sidebar-scroll,
+  div[style*="height:100vh"] > .sidebar-scroll {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+
+  .sidebar .sidebar-brand,
+  div[style*="height:100vh"] > aside .sidebar-brand {
+    display: none !important;
+  }
+
+  .sidebar .sidebar-section-label,
+  div[style*="height:100vh"] > aside .sidebar-section-label {
+    display: none !important;
+  }
+
+  .sidebar .sidebar-link,
+  div[style*="height:100vh"] > aside .sidebar-link {
+    flex-shrink: 0 !important;
+    padding: 8px !important;
+    white-space: nowrap !important;
+  }
+
+  .sidebar .sidebar-user,
+  div[style*="height:100vh"] > aside .sidebar-user {
+    display: none !important;
+  }
+
+  .main-content,
+  div[style*="height:100vh"] > div[style*="flex:1"],
+  div[style*="height:100vh"] > .main-content {
+    flex: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: calc(100vh - 76px) !important;
+    overflow-x: hidden !important;
+  }
+
+  .page-header,
+  div[style*="background:#ffffff"][style*="border-bottom"][style*="padding:14px 24px"] {
+    padding: 12px 14px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .page-header h2,
+  .page-header p,
+  div[style*="background:#ffffff"][style*="border-bottom"] h2,
+  div[style*="background:#ffffff"][style*="border-bottom"] p {
+    max-width: calc(100vw - 120px) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .content-body,
+  div[style*="flex:1"][style*="overflow-y:auto"],
+  div[style*="overflow-y:auto"] {
+    padding: 14px !important;
+    overflow-x: hidden !important;
+  }
+
+  .card,
+  .stat-card,
+  .stat-card-white,
+  .empty-state,
+  div[style*="background:#ffffff"][style*="border-radius:14px"][style*="padding:20px"],
+  div[style*="background:#ffffff"][style*="border-radius:14px"][style*="padding:24px"] {
+    padding: 14px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .card-grid,
+  .card-grid-2,
+  .card-grid-3,
+  .card-grid-4,
+  div[style*="display:grid"][style*="repeat(3,1fr)"],
+  div[style*="display:grid"][style*="repeat(auto-fill"],
+  div[style*="display:grid"][style*="gap:16px"],
+  div[style*="display:grid"][style*="gap:14px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .banner-dark,
+  .banner-warning {
+    padding: 16px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .banner-stat {
+    width: 100% !important;
+  }
+
+  form[style*="grid-template-columns:1fr 1fr"],
+  form[style*="grid-template-columns:1fr 1fr auto"],
+  div[style*="display:grid"][style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .btn,
+  .btn-dark,
+  .btn-sm,
+  .btn-black,
+  button[style*="background:#111827"],
+  button[style*="background:#3b82f6"],
+  button[style*="background:none"],
+  div[style*="background:#111827"] {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  table,
+  .data-table {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  table thead,
+  table tbody,
+  table tfoot {
+    display: table !important;
+    width: 100% !important;
+    min-width: 680px !important;
+  }
+
+  table th,
+  table td {
+    padding: 10px 12px !important;
+    white-space: nowrap !important;
+  }
+
+  .nota-input {
+    width: 58px !important;
+    padding: 5px !important;
+  }
+
+  .prom-badge {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 12px !important;
+  }
+
+  .card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 12px 14px !important;
+  }
+
+  .section-title,
+  div[style*="font-size:14px"][style*="font-weight:600"] {
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .sidebar,
+  div[style*="height:100vh"] > aside,
+  div[style*="height:100vh"] > .sidebar {
+    gap: 6px !important;
+    padding: 10px !important;
+  }
+
+  .sidebar .sidebar-link,
+  div[style*="height:100vh"] > aside .sidebar-link {
+    font-size: 12px !important;
+    padding: 7px !important;
+  }
+
+  .content-body,
+  div[style*="flex:1"][style*="overflow-y:auto"] {
+    padding: 10px !important;
+  }
+
+  .page-header,
+  div[style*="background:#ffffff"][style*="border-bottom"][style*="padding:14px 24px"] {
+    padding: 10px 12px !important;
+  }
 }
