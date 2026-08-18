@@ -22,7 +22,7 @@
 
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;">
                 <div style="padding:14px 18px; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between;">
-                    <p style="font-size:14px; font-weight:600; color:#1f2937; margin:0;">Estado de mensualidades 2026</p>
+                     <p style="font-size:14px; font-weight:600; color:#1f2937; margin:0;">Estado de mensualidades</p>
                     @php
                         $pagados = $mensualidades->where('estado','pagado')->count();
                         $totalMeses = $mensualidades->count();

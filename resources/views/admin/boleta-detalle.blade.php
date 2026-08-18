@@ -412,8 +412,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
             </a>
             <div class="boleta-title-block">
-                <h2 class="boleta-title">Boleta — {{ $alumno->nombre }} {{ $alumno->apellido }}</h2>
-                <p class="boleta-subtitle">{{ $alumno->codigo }} · Ciclo 2026</p>
+                <h2 class="boleta-title">Boleta — {{ $alumno->nombre_completo }}</h2>
+                 <p class="boleta-subtitle">{{ $alumno->codigo }} · Ciclo {{ now()->year }}</p>
             </div>
             <div style="margin-left:auto;">
                 <a href="{{ route('admin.boletas.pdf', $alumno->id) }}"
@@ -433,7 +433,7 @@
                         {{ strtoupper(substr($alumno->nombre,0,1).substr($alumno->apellido,0,1)) }}
                     </div>
                     <div style="min-width:0;">
-                        <p class="boleta-student-name">{{ $alumno->nombre }} {{ $alumno->apellido }}</p>
+                        <p class="boleta-student-name">{{ $alumno->nombre_completo }}</p>
                         <p class="boleta-student-meta">Código: {{ $alumno->codigo }} · {{ $alumno->inscripciones->first()?->curso?->nombre ?? '—' }} · {{ $alumno->inscripciones->first()?->curso?->nivel ?? '' }}</p>
                     </div>
                 </div>

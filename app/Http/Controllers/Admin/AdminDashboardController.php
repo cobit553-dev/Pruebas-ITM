@@ -7,9 +7,13 @@ use App\Models\Alumno;
 use App\Models\Encargado;
 use App\Models\Maestro;
 use App\Models\Materia;
+use App\Models\Mensualidad;
+use App\Models\Nota;
 use App\Models\Curso;
 use App\Models\Inscripcion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AdminDashboardController extends Controller
@@ -20,7 +24,75 @@ class AdminDashboardController extends Controller
 
     public function index()
     {
-        return view('admin.dashboard');
+        // ── Tarjetas de estadísticas ─────────────────────────────────────────
+        $totalAlumnos  = Inscripcion::where('activa', 1)->distinct()->count('alumno_id');
+        $totalMaestros = Maestro::where('activo', 1)->count();
+        $totalMaterias = Materia::where('activa', 1)->count();
+
+        // ── Mensualidades: pendientes y % al día (solo año actual) ─────────
+        $anioActual = (int) now()->year;
+        $totalMensualidades = Mensualidad::where('anio', $anioActual)->count();
+        $pagosPendientes    = Mensualidad::where('estado', 'Pendiente')->where('anio', $anioActual)->count();
+
+        $pagosAlDia = $totalMensualidades > 0
+            ? (int) round((($totalMensualidades - $pagosPendientes) / $totalMensualidades) * 100)
+            : 0;
+
+        // ── Promedio general de notas ────────────────────────────────────────
+        $promedioGeneral = Nota::whereNotNull('promedio')->avg('promedio');
+        $promedioGeneral = $promedioGeneral !== null ? round($promedioGeneral, 1) : null;
+
+        // ── Maestros activos con sus materias ────────────────────────────────
+        $maestrosActivos = Maestro::where('activo', 1)
+            ->with('detalleCursos.materia')
+            ->orderBy('nombre')
+            ->take(4)
+            ->get();
+
+        // ── Estado de mensualidades por mes ──────────────────────────────────
+        // El accessor nombre_mes soporta mes guardado como número o como nombre
+        $ordenMeses = [
+            'Enero' => 1, 'Febrero' => 2, 'Marzo' => 3, 'Abril' => 4,
+            'Mayo' => 5, 'Junio' => 6, 'Julio' => 7, 'Agosto' => 8,
+            'Septiembre' => 9, 'Octubre' => 10, 'Noviembre' => 11, 'Diciembre' => 12,
+        ];
+
+        $estadoMensualidades = Mensualidad::all()
+            ->groupBy('nombre_mes')
+            ->map(function ($grupo, $nombreMes) {
+                $total   = $grupo->count();
+                $pagadas = $grupo->where('estado', 'Pagado')->count();
+
+                $anio = null;
+                if ($grupo->first()->fecha_vencimiento) {
+                    try {
+                        $anio = Carbon::parse($grupo->first()->fecha_vencimiento)->year;
+                    } catch (\Exception $e) {
+                        $anio = null;
+                    }
+                }
+
+                return [
+                    'mes'      => $nombreMes,
+                    'anio'     => $anio ?? now()->year,
+                    'total'    => $total,
+                    'pagadas'  => $pagadas,
+                    'completo' => $total > 0 && $pagadas === $total,
+                ];
+            })
+            ->sortBy(fn ($m) => $ordenMeses[$m['mes']] ?? 99)
+            ->values();
+
+        return view('admin.dashboard', compact(
+            'totalAlumnos',
+            'totalMaestros',
+            'totalMaterias',
+            'pagosPendientes',
+            'pagosAlDia',
+            'promedioGeneral',
+            'maestrosActivos',
+            'estadoMensualidades'
+        ));
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────
@@ -41,38 +113,152 @@ class AdminDashboardController extends Controller
         return view('admin.alumnos', compact('alumnos', 'cursos', 'totalAlumnos', 'activos', 'inactivos'));
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    // CÓDIGO AUTOMÁTICO POR INICIALES
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    private function generarCodigoAlumno(string $nombre, string $apellido): string
+    {
+        $limpiar = function (string $texto): string {
+            $texto = trim($texto);
+            $texto = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $texto) ?: $texto;
+            $texto = preg_replace('/[^a-zA-Z\s]/', '', $texto);
+            return $texto;
+        };
+
+        $nombreLimpio   = $limpiar($nombre);
+        $apellidoLimpio = $limpiar($apellido);
+
+        $palabrasNombre   = array_values(array_filter(explode(' ', $nombreLimpio)));
+        $palabrasApellido = array_values(array_filter(explode(' ', $apellidoLimpio)));
+
+        $iniciales = '';
+        foreach (array_slice($palabrasNombre, 0, 2) as $p) {
+            $iniciales .= strtoupper($p[0] ?? '');
+        }
+        foreach (array_slice($palabrasApellido, 0, 2) as $p) {
+            $iniciales .= strtoupper($p[0] ?? '');
+        }
+
+        $max = Alumno::where('codigo', 'like', $iniciales . '%')->max('codigo');
+        $numero = 1;
+        if ($max) {
+            $numStr = preg_replace('/[^0-9]/', '', $max);
+            $numero = (int) $numStr + 1;
+        }
+
+        return $iniciales . str_pad((string) $numero, 3, '0', STR_PAD_LEFT);
+    }
+
+    public function siguienteCodigo(Request $request)
+    {
+        $request->validate([
+            'nombre'   => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+        ]);
+
+        $codigo = $this->generarCodigoAlumno($request->nombre, $request->apellido);
+
+        return response()->json([
+            'codigo' => $codigo,
+            'email'  => strtolower($codigo) . '@itm.edu.sv',
+        ]);
+    }
+
     public function storeAlumno(Request $request)
     {
+        // Determinar mayoría de edad a partir de la fecha de nacimiento (cálculo en servidor,
+        // nunca confiar solo en lo que muestre/oculte el frontend)
+        $esMayorDeEdad = false;
+        if ($request->filled('fecha_nacimiento')) {
+            try {
+                $esMayorDeEdad = Carbon::parse($request->fecha_nacimiento)->age >= 18;
+            } catch (\Exception $e) {
+                $esMayorDeEdad = false;
+            }
+        }
+
         $request->validate([
             'nombre'           => 'required|string|max:255',
             'apellido'         => 'required|string|max:255',
-            'codigo'           => 'required|string|unique:alumnos,codigo',
-            'fecha_nacimiento' => 'nullable|date',
+            'fecha_nacimiento' => 'required|date|before:today',
             'sexo'             => 'nullable|in:M,F',
             'telefono'         => 'nullable|string|max:20',
             'direccion'        => 'nullable|string|max:255',
-            'email'            => 'required|email|unique:users,email',
             'password'         => 'required|min:8|confirmed',
+
+            'dui'              => [
+                $esMayorDeEdad ? 'required' : 'nullable',
+                'string',
+                'regex:/^\d{8}-\d$/',
+                'unique:alumnos,dui',
+            ],
+
+            'encargado_nombre'     => [$esMayorDeEdad ? 'nullable' : 'required', 'string', 'max:255'],
+            'encargado_apellido'   => [$esMayorDeEdad ? 'nullable' : 'required', 'string', 'max:255'],
+            'encargado_parentesco' => [$esMayorDeEdad ? 'nullable' : 'required', 'string', 'max:50'],
+            'encargado_dui'        => [$esMayorDeEdad ? 'nullable' : 'required', 'string', 'regex:/^\d{8}-\d$/'],
+            'encargado_telefono'   => 'nullable|string|max:20',
+            'encargado_email'      => 'nullable|email|max:255',
+        ], [
+            'fecha_nacimiento.required'     => 'La fecha de nacimiento es obligatoria para determinar si el alumno es mayor o menor de edad.',
+            'fecha_nacimiento.before'       => 'La fecha de nacimiento debe ser anterior a hoy.',
+            'dui.required'                  => 'El DUI del alumno es obligatorio cuando es mayor de edad.',
+            'dui.regex'                     => 'El DUI del alumno debe tener el formato 01234567-8.',
+            'dui.unique'                    => 'Ya existe un alumno registrado con ese DUI.',
+            'encargado_nombre.required'     => 'El nombre del encargado es obligatorio para alumnos menores de edad.',
+            'encargado_apellido.required'   => 'El apellido del encargado es obligatorio para alumnos menores de edad.',
+            'encargado_parentesco.required' => 'El parentesco del encargado es obligatorio para alumnos menores de edad.',
+            'encargado_dui.required'        => 'El DUI del encargado es obligatorio para alumnos menores de edad.',
+            'encargado_dui.regex'           => 'El DUI del encargado debe tener el formato 01234567-8.',
         ]);
 
-        $user = \App\Models\User::create([
-            'name'     => $request->nombre . ' ' . $request->apellido,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => 'alumno',
-        ]);
+        DB::transaction(function () use ($request, $esMayorDeEdad) {
 
-        Alumno::create([
-            'user_id'          => $user->id,
-            'nombre'           => $request->nombre,
-            'apellido'         => $request->apellido,
-            'codigo'           => $request->codigo,
-            'fecha_nacimiento' => $request->fecha_nacimiento,
-            'genero'           => $request->sexo,
-            'telefono'         => $request->telefono,
-            'direccion'        => $request->direccion,
-            'activo'           => 1,
-        ]);
+            $codigo = $this->generarCodigoAlumno($request->nombre, $request->apellido);
+            $email  = strtolower($codigo) . '@itm.edu.sv';
+
+            $user = \App\Models\User::create([
+                'name'     => $request->nombre . ' ' . $request->apellido,
+                'email'    => $email,
+                'password' => Hash::make($request->password),
+                'role'     => 'alumno',
+            ]);
+
+            $alumno = Alumno::create([
+                'user_id'          => $user->id,
+                'nombre'           => $request->nombre,
+                'apellido'         => $request->apellido,
+                'codigo'           => $codigo,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'dui'              => $esMayorDeEdad ? $request->dui : null,
+                'genero'           => $request->sexo,
+                'telefono'         => $request->telefono,
+                'direccion'        => $request->direccion,
+                'activo'           => 1,
+            ]);
+
+            // Menor de edad: crear (o reutilizar) encargado y vincularlo
+            if (! $esMayorDeEdad) {
+
+                // Si ya existe un encargado con ese DUI (ej. hermano del alumno), se reutiliza
+                $encargado = Encargado::where('dui', $request->encargado_dui)->first();
+
+                if (! $encargado) {
+                    $encargado = Encargado::create([
+                        'nombre'   => $request->encargado_nombre,
+                        'apellido' => $request->encargado_apellido,
+                        'telefono' => $request->encargado_telefono,
+                        'dui'      => $request->encargado_dui,
+                        'email'    => $request->encargado_email,
+                        'activo'   => 1,
+                    ]);
+                }
+
+                $alumno->encargados()->attach($encargado->id, [
+                    'parentesco' => $request->encargado_parentesco,
+                ]);
+            }
+        });
 
         return redirect()->route('admin.alumnos')->with('success', 'Alumno registrado correctamente.');
     }
@@ -148,17 +334,68 @@ class AdminDashboardController extends Controller
     public function storeMateria(Request $request)
     {
         $request->validate([
-            'codigo' => 'required|string|max:5|unique:materias,codigo',
             'nombre' => 'required|string|max:255',
         ]);
 
+        $codigo = $this->generarCodigoMateria($request->nombre);
+
         Materia::create([
-            'codigo' => strtoupper($request->codigo),
+            'codigo' => $codigo,
             'nombre' => $request->nombre,
             'activa' => 1,
         ]);
 
         return redirect()->route('admin.materias')->with('success', 'Materia registrada correctamente.');
+    }
+
+    private function generarCodigoMateria(string $nombre): string
+    {
+        $limpiar = function (string $texto): string {
+            $texto = trim($texto);
+            $texto = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $texto) ?: $texto;
+            $texto = preg_replace('/[^a-zA-Z\s]/', '', $texto);
+            return $texto;
+        };
+
+        $nombreLimpio = $limpiar($nombre);
+        $palabras = array_values(array_filter(explode(' ', $nombreLimpio)));
+
+        $codigo = '';
+        foreach ($palabras as $p) {
+            if ($p) $codigo .= strtoupper($p[0]);
+        }
+
+        $base = substr($codigo, 0, 5);
+
+        $intento = 2;
+        while (Materia::where('codigo', $base)->exists() && $intento <= count($palabras)) {
+            $base = '';
+            for ($i = 0; $i < min($intento, count($palabras)); $i++) {
+                $base .= strtoupper($palabras[$i][0]);
+            }
+            $intento++;
+        }
+
+        return $base;
+    }
+
+    public function siguienteCodigoMateria(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+        ]);
+
+        $codigo = $this->generarCodigoMateria($request->nombre);
+
+        return response()->json([
+            'codigo' => $codigo,
+        ]);
+    }
+
+    public function toggleMateria(Materia $materia)
+    {
+        $materia->update(['activa' => !$materia->activa]);
+        return response()->json(['activa' => $materia->activa]);
     }
 
     // ─────────────────────────────────────────────────────────────────────────────────────────

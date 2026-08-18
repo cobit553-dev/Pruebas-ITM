@@ -20,6 +20,16 @@ class NotaController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'alumno_id'        => 'required|exists:alumnos,id',
+            'detalle_curso_id' => 'required|exists:detalle_cursos,id',
+            'laboratorio'      => 'nullable|numeric|min:0|max:10',
+            'examen_teorico'   => 'nullable|numeric|min:0|max:10',
+            'practica'         => 'nullable|numeric|min:0|max:10',
+            'sos'              => 'nullable|numeric|min:0|max:10',
+            'conducta'         => 'nullable|string|max:2',
+        ]);
+
         $nota = Nota::updateOrCreate(
             ['alumno_id' => $request->alumno_id, 'detalle_curso_id' => $request->detalle_curso_id],
             [
@@ -27,6 +37,7 @@ class NotaController extends Controller
                 'examen_teorico' => $request->examen_teorico,
                 'practica'       => $request->practica,
                 'sos'            => $request->sos,
+                'conducta'       => $request->conducta,
                 'registrado_por' => auth()->id(),
             ]
         );

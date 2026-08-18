@@ -13,7 +13,7 @@
                 onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">✕</button>
         </div>
         <p id="textoRechazo" style="font-size:13px; color:#6b7280; margin:0 0 16px;"></p>
-        <form id="formRechazo" method="POST">
+        <form id="formRechazo" method="POST" autocomplete="off">
             @csrf
             <div style="margin-bottom:16px;">
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">

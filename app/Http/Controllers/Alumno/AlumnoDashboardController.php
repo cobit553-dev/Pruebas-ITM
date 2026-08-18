@@ -50,7 +50,7 @@ class AlumnoDashboardController extends Controller
         $cursosDisponibles = collect();
         if (!$inscripcion) {
             $cursosDisponibles = Curso::where('activo', true)
-                ->where('anio_lectivo', 2026)
+                ->where('anio_lectivo', (int) now()->year)
                 ->get();
         }
 
@@ -81,7 +81,7 @@ class AlumnoDashboardController extends Controller
         $cursosDisponibles = collect();
         if (!$inscripcion) {
             $cursosDisponibles = Curso::where('activo', true)
-                ->where('anio_lectivo', 2026)
+                ->where('anio_lectivo', (int) now()->year)
                 ->get();
         }
 

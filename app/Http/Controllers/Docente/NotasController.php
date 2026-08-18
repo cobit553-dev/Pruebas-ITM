@@ -94,6 +94,7 @@ class NotasController extends Controller
             'notas.*.examen_teorico' => 'nullable|numeric|min:0|max:10',
             'notas.*.practica'       => 'nullable|numeric|min:0|max:10',
             'notas.*.sos'            => 'nullable|numeric|min:0|max:10',
+            'notas.*.conducta'       => 'nullable|string|max:2',
         ]);
 
         $detalle = DetalleCurso::where('id', $request->detalle_curso_id)
@@ -114,6 +115,7 @@ class NotasController extends Controller
                     'examen_teorico' => $valores['examen_teorico'] ?? null,
                     'practica'       => $valores['practica']       ?? null,
                     'sos'            => $valores['sos']            ?? null,
+                    'conducta'       => $valores['conducta']       ?? null,
                     'registrado_por' => $maestro->id,
                 ]
             );

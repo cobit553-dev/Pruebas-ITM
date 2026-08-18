@@ -15,22 +15,24 @@
                 onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">✕</button>
         </div>
 
-        <form method="POST" action="{{ route('admin.materias.store') }}" style="display:flex; flex-direction:column; gap:16px;">
+        <form method="POST" action="{{ route('admin.materias.store') }}" autocomplete="off" style="display:flex; flex-direction:column; gap:16px;">
             @csrf
 
             {{-- Código --}}
             <div>
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Código <span style="color:#dc2626;">*</span></label>
-                <input type="text" name="codigo" required placeholder="Ej: WIN, WRD, EXC"
-                    style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box; font-family:monospace; text-transform:uppercase;"
-                    onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'; this.value=this.value.toUpperCase()">
-                <p style="font-size:11px; color:#9ca3af; margin:4px 0 0;">Máximo 5 caracteres, solo letras. Ej: WIN, WRD, CDR</p>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <input type="text" name="codigo" id="codigoMateria" required placeholder="Se genera automáticamente" readonly
+                        style="flex:1; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f0fdf4; color:#111827; outline:none; box-sizing:border-box; font-family:monospace; text-transform:uppercase;">
+                    <span id="badgeCodigoMateria" style="display:none; background:#dcfce7; color:#16a34a; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap;">Automático</span>
+                </div>
+                <p style="font-size:11px; color:#9ca3af; margin:4px 0 0;">Solo letras, formado por las iniciales de cada palabra del nombre.</p>
             </div>
 
             {{-- Nombre --}}
             <div>
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Nombre de la materia <span style="color:#dc2626;">*</span></label>
-                <input type="text" name="nombre" required placeholder="Ej: Microsoft Windows"
+                <input type="text" name="nombre" id="nombreMateria" required placeholder="Ej: Microsoft Windows"
                     style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                     onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
             </div>
@@ -57,9 +59,14 @@
             {{-- Botones --}}
             <div style="display:flex; gap:10px; padding-top:4px;">
                 <button type="button" onclick="cerrarModalMateria()"
-                    style="flex:1; padding:10px; background:#f3f4f6; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#374151; cursor:pointer;"
+                    style="padding:10px 16px; background:#f3f4f6; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#374151; cursor:pointer;"
                     onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                     Cancelar
+                </button>
+                <button type="button" onclick="limpiarFormularioMateria()"
+                    style="padding:10px 16px; background:#ffffff; border:1px solid #e5e7eb; border-radius:10px; font-size:13px; font-weight:600; color:#6b7280; cursor:pointer;"
+                    onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='#ffffff'">
+                    Limpiar
                 </button>
                 <button type="submit"
                     style="flex:1; padding:10px; background:#111827; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#ffffff; cursor:pointer;"
@@ -70,3 +77,62 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const nombreInput = document.getElementById('nombreMateria');
+        const codigoInput = document.getElementById('codigoMateria');
+        const badgeCodigo = document.getElementById('badgeCodigoMateria');
+
+        function limpiar(texto) {
+            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ñ/g, 'n').replace(/Ñ/g, 'N');
+        }
+
+        function iniciales(nombre) {
+            const n = limpiar(nombre).trim().split(' ').filter(Boolean);
+            let ini = '';
+            n.slice(0, 2).forEach(p => { if (p) ini += p[0].toUpperCase(); });
+            return ini;
+        }
+
+        let debounce;
+        async function actualizarCodigoMateria() {
+            clearTimeout(debounce);
+            debounce = setTimeout(async () => {
+                const nom = nombreInput?.value || '';
+                const ini = iniciales(nom);
+
+                if (ini.length < 1) {
+                    codigoInput.value = '';
+                    if (badgeCodigo) badgeCodigo.style.display = 'none';
+                    return;
+                }
+
+                try {
+                    const res = await fetch('{{ route("admin.materias.siguienteCodigo") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ nombre: nom })
+                    });
+                    const data = await res.json();
+                    codigoInput.value = data.codigo;
+                    if (badgeCodigo) badgeCodigo.style.display = 'inline-block';
+                } catch (e) {
+                    console.error('Error al calcular código:', e);
+                }
+            }, 300);
+        }
+
+        if (nombreInput) nombreInput.addEventListener('input', actualizarCodigoMateria);
+
+        window.limpiarFormularioMateria = function () {
+            const form = document.querySelector('#modalNuevaMateria form');
+            if (form) form.reset();
+            if (codigoInput) codigoInput.value = '';
+            if (badgeCodigo) badgeCodigo.style.display = 'none';
+        };
+    });
+</script>

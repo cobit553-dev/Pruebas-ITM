@@ -17,20 +17,6 @@
         </header>
 
         <div style="flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px;">
-
-            @if(session('success'))
-            <div style="background:#dcfce7; border:1px solid #86efac; border-radius:10px; padding:12px 16px; font-size:13px; color:#16a34a; display:flex; align-items:center; gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                {{ session('success') }}
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 16px; font-size:13px; color:#dc2626;">
-                {{ session('error') }}
-            </div>
-            @endif
-
             {{-- ═══ PENDIENTES ═══ --}}
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;">
                 <div style="padding:16px 24px; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; gap:8px;">
@@ -58,7 +44,7 @@
                                 </div>
                                 <div>
                                     <p style="font-size:14px; font-weight:600; color:#111827; margin:0;">
-                                        {{ $ins->alumno->nombre }} {{ $ins->alumno->apellido }}
+                                        {{ $ins->alumno->nombre_completo }}
                                     </p>
                                     <p style="font-size:12px; color:#6b7280; margin:2px 0 0;">
                                         Código: <strong>{{ $ins->alumno->codigo }}</strong>
@@ -114,12 +100,15 @@
                             @endif
 
                             {{-- Aprobar --}}
-                            <form method="POST" action="{{ route('admin.solicitudes.aprobar', $ins->id) }}">
+                            <form method="POST" action="{{ route('admin.solicitudes.aprobar', $ins->id) }}"
+                                  data-confirm="¿Aprobar la inscripción de {{ $ins->alumno->nombre_completo }}?"
+                                  data-confirm-titulo="Aprobar inscripción"
+                                  data-confirm-boton="Sí, aprobar"
+                                  data-confirm-tipo="exito">
                                 @csrf
                                 <button type="submit"
                                     style="width:100%; padding:8px 14px; background:#f0fdf4; border:1px solid #86efac; border-radius:8px; font-size:12px; font-weight:600; color:#16a34a; cursor:pointer;"
-                                    onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'"
-                                    onclick="return confirm('¿Aprobar la inscripción de {{ $ins->alumno->nombre }} {{ $ins->alumno->apellido }}?')">
+                                    onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
                                     ✓ Aprobar
                                 </button>
                             </form>
@@ -174,7 +163,7 @@
                                         {{ strtoupper(substr($ins->alumno->nombre,0,1).substr($ins->alumno->apellido,0,1)) }}
                                     </div>
                                     <div>
-                                        <p style="font-size:13px; font-weight:500; color:#111827; margin:0;">{{ $ins->alumno->nombre }} {{ $ins->alumno->apellido }}</p>
+                                        <p style="font-size:13px; font-weight:500; color:#111827; margin:0;">{{ $ins->alumno->nombre_completo }}</p>
                                         <p style="font-size:11px; color:#9ca3af; margin:0;">{{ $ins->alumno->codigo }}</p>
                                     </div>
                                 </div>
@@ -217,23 +206,8 @@
 
 @include('admin.partials.modal-rechazo-solicitud')
 
-<script>
-function abrirRechazo(id, nombre) {
-    document.getElementById('textoRechazo').textContent = 'Estás rechazando la solicitud de ' + nombre + '. Esta acción notificará al alumno.';
-    document.getElementById('formRechazo').action = '/admin/solicitudes/' + id + '/rechazar';
-    document.getElementById('modalRechazo').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarRechazo() {
-    document.getElementById('modalRechazo').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('modalRechazo').addEventListener('click', function(e) {
-        if (e.target === this) cerrarRechazo();
-    });
-});
-</script>
+@push('scripts')
+@vite('resources/js/admin/solicitudes.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

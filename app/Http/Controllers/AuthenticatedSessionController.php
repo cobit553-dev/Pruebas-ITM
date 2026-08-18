@@ -3,8 +3,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\Maestro;
-use App\Models\Alumno;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,17 +18,18 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        $userId = Auth::id();
+        $user = Auth::user();
 
-        if (Maestro::where('user_id', $userId)->exists()) {
-            return redirect()->intended(route('docente.notas'));
+        switch ($user->role) {
+            case 'admin':
+                return redirect(route('admin.dashboard'));
+            case 'docente':
+                return redirect(route('docente.dashboard'));
+            case 'alumno':
+                return redirect(route('alumno.dashboard'));
+            default:
+                return redirect(route('dashboard'));
         }
-
-        if (Alumno::where('user_id', $userId)->exists()) {
-            return redirect()->intended(route('alumno.dashboard'));
-        }
-
-        return redirect()->intended(route('dashboard'));
     }
 
     public function destroy(Request $request): RedirectResponse {

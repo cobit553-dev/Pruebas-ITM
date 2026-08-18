@@ -8,103 +8,180 @@
     <div style="display:flex; gap:0; margin-bottom:28px;">
         <div style="flex:1; text-align:center;">
             <div style="width:32px; height:32px; border-radius:50%; background:#111827; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">1</div>
-            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Descarga el formulario</p>
-            <p style="font-size:10px; color:#9ca3af; margin:0;">PDF con tus datos</p>
+            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Llena el formulario</p>
+            <p style="font-size:10px; color:#9ca3af; margin:0;">Datos digitales</p>
         </div>
         <div style="flex:0; display:flex; align-items:center; padding-bottom:20px;">
             <div style="width:40px; height:1px; background:#e5e7eb;"></div>
         </div>
         <div style="flex:1; text-align:center;">
             <div style="width:32px; height:32px; border-radius:50%; background:#d1d5db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">2</div>
-            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Fírmalo</p>
-            <p style="font-size:10px; color:#9ca3af; margin:0;">Encargado y alumno</p>
+            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Firma digital</p>
+            <p style="font-size:10px; color:#9ca3af; margin:0;">Tú y tu encargado</p>
         </div>
         <div style="flex:0; display:flex; align-items:center; padding-bottom:20px;">
             <div style="width:40px; height:1px; background:#e5e7eb;"></div>
         </div>
         <div style="flex:1; text-align:center;">
             <div style="width:32px; height:32px; border-radius:50%; background:#d1d5db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">3</div>
-            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Súbelo firmado</p>
-            <p style="font-size:10px; color:#9ca3af; margin:0;">Solo PDF</p>
-        </div>
-        <div style="flex:0; display:flex; align-items:center; padding-bottom:20px;">
-            <div style="width:40px; height:1px; background:#e5e7eb;"></div>
-        </div>
-        <div style="flex:1; text-align:center;">
-            <div style="width:32px; height:32px; border-radius:50%; background:#d1d5db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">4</div>
-            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Espera aprobación</p>
-            <p style="font-size:10px; color:#9ca3af; margin:0;">El admin revisa</p>
+            <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Enviar solicitud</p>
+            <p style="font-size:10px; color:#9ca3af; margin:0;">Admin revisa</p>
         </div>
     </div>
 
-    {{-- Paso 1: Descargar PDF --}}
-    <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:18px; margin-bottom:16px;">
-        <p style="font-size:13px; font-weight:600; color:#111827; margin:0 0 8px;">Paso 1 — Descarga tu formulario</p>
-        <p style="font-size:12px; color:#6b7280; margin:0 0 14px;">El PDF se generará con tus datos personales. Imprímelo, fírmalo junto con tu encargado y luego súbelo en el Paso 2.</p>
-        <a href="{{ route('alumno.inscripcion.pdf') }}"
-           style="display:inline-flex; align-items:center; gap:8px; padding:10px 20px; background:#111827; color:#fff; border-radius:10px; font-size:13px; font-weight:600; text-decoration:none;"
-           onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Descargar formulario PDF
-        </a>
-    </div>
+    <form method="POST" action="{{ route('alumno.inscripcion.enviar') }}" id="formInscripcion"
+        style="display:flex; flex-direction:column; gap:20px;">
+        @csrf
 
-    {{-- Paso 2: Subir documento firmado --}}
-    <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:18px;">
-        <p style="font-size:13px; font-weight:600; color:#111827; margin:0 0 8px;">Paso 2 — Sube el formulario firmado</p>
-        <p style="font-size:12px; color:#6b7280; margin:0 0 14px;">Selecciona el curso al que deseas inscribirte y adjunta el PDF firmado por tu encargado.</p>
-
-        <form method="POST" action="{{ route('alumno.inscripcion.subir') }}" enctype="multipart/form-data"
-            style="display:flex; flex-direction:column; gap:14px;">
-            @csrf
-
-            {{-- Selección de curso --}}
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">Sección a la que deseas inscribirte</label>
-                <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px;">
-                    @foreach($cursosDisponibles as $curso)
-                    <label style="cursor:pointer;">
-                        <input type="radio" name="curso_id" value="{{ $curso->id }}" style="display:none;" class="curso-radio" required>
-                        <div class="curso-card" style="background:#ffffff; border:2px solid #e5e7eb; border-radius:10px; padding:14px; text-align:center; transition:all .15s;">
-                            <p style="font-size:18px; font-weight:700; color:#111827; margin:0 0 2px;">{{ $curso->seccion }}</p>
-                            <p style="font-size:11px; color:#6b7280; margin:0;">{{ $curso->nivel }}</p>
-                        </div>
-                    </label>
-                    @endforeach
+        {{-- SECCIÓN 1: Datos del alumno (pre-llenados) --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">Datos del Alumno</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Nombre completo</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->nombre_completo }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Código / Matrícula</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827; font-family:monospace;">
+                        {{ $alumno->codigo }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Fecha de nacimiento</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->fecha_nacimiento ? \Carbon\Carbon::parse($alumno->fecha_nacimiento)->isoFormat('D [de] MMMM [de] YYYY') : '—' }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Sexo</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->genero === 'M' ? 'Masculino' : ($alumno->genero === 'F' ? 'Femenino' : '—') }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Teléfono</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->telefono ?? '—' }}
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Dirección</label>
+                    <div style="padding:9px 12px; background:#ffffff; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; color:#111827;">
+                        {{ $alumno->direccion ?? '—' }}
+                    </div>
                 </div>
             </div>
+        </div>
 
-            {{-- Subir PDF --}}
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">
-                    Formulario firmado (PDF)
-                    <span style="color:#dc2626;">*</span>
+        {{-- SECCIÓN 2: Datos del encargado --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">Datos del Encargado</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Nombre completo <span style="color:#dc2626;">*</span></label>
+                    <input type="text" name="encargado_nombre" required placeholder="Nombre y apellido del encargado"
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Teléfono del encargado</label>
+                    <input type="text" name="encargado_telefono" placeholder="Ej: 7777-8888"
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Parentesco <span style="color:#dc2626;">*</span></label>
+                    <select name="encargado_parentesco" required
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box; cursor:pointer;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                        <option value="">Seleccionar...</option>
+                        <option value="Padre">Padre</option>
+                        <option value="Madre">Madre</option>
+                        <option value="Tutor">Tutor</option>
+                        <option value="Abuelo/a">Abuelo/a</option>
+                        <option value="Tío/a">Tío/a</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">DUI del encargado</label>
+                    <input type="text" name="encargado_dui" placeholder="Ej: 00000000-0"
+                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
+                </div>
+            </div>
+        </div>
+
+        {{-- SECCIÓN 3: Selección de curso --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">Selección de Sección</p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px;">
+                @foreach($cursosDisponibles as $curso)
+                <label style="cursor:pointer;">
+                    <input type="radio" name="curso_id" value="{{ $curso->id }}" style="display:none;" class="curso-radio" required>
+                    <div class="curso-card" style="background:#ffffff; border:2px solid #e5e7eb; border-radius:10px; padding:14px; text-align:center; transition:all .15s;">
+                        <p style="font-size:18px; font-weight:700; color:#111827; margin:0 0 2px;">{{ $curso->seccion }}</p>
+                        <p style="font-size:12px; font-weight:500; color:#374151; margin:0 0 2px;">{{ $curso->nombre }}</p>
+                        <p style="font-size:11px; color:#6b7280; margin:0;">{{ $curso->nivel }}</p>
+                    </div>
                 </label>
-                <input type="file" name="documento" accept=".pdf" required
-                    style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box; cursor:pointer;">
-                <p style="font-size:11px; color:#9ca3af; margin:4px 0 0;">Solo archivos PDF. Tamaño máximo 5MB.</p>
+                @endforeach
             </div>
+        </div>
 
-            <div>
-                <button type="submit"
-                    style="padding:11px 24px; background:#f59e0b; border:none; border-radius:10px; color:#fff; font-size:14px; font-weight:700; cursor:pointer;"
-                    onmouseover="this.style.background='#d97706'" onmouseout="this.style.background='#f59e0b'">
-                    Enviar solicitud
-                </button>
+        {{-- SECCIÓN 4: Firmas digitales --}}
+        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 6px;">Firmas Digitales</p>
+            <p style="font-size:12px; color:#6b7280; margin:0 0 16px;">Dibuja tu firma y la firma del encargado usando el mouse o el dedo en pantalla táctil.</p>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+                {{-- Firma del alumno --}}
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">Firma del Alumno <span style="color:#dc2626;">*</span></label>
+                    <canvas id="firmaAlumno" width="300" height="120"
+                        style="width:100%; height:120px; border:2px solid #e5e7eb; border-radius:10px; background:#ffffff; cursor:crosshair; touch-action:none;">
+                    </canvas>
+                    <input type="hidden" name="firma_alumno" id="firmaAlumnoData">
+                    <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+                        <button type="button" onclick="limpiarFirma('firmaAlumno', 'firmaAlumnoData')"
+                            style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:11px; padding:4px 10px; border-radius:6px; cursor:pointer;">
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Firma del encargado --}}
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">Firma del Encargado <span style="color:#dc2626;">*</span></label>
+                    <canvas id="firmaEncargado" width="300" height="120"
+                        style="width:100%; height:120px; border:2px solid #e5e7eb; border-radius:10px; background:#ffffff; cursor:crosshair; touch-action:none;">
+                    </canvas>
+                    <input type="hidden" name="firma_encargado" id="firmaEncargadoData">
+                    <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+                        <button type="button" onclick="limpiarFirma('firmaEncargado', 'firmaEncargadoData')"
+                            style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:11px; padding:4px 10px; border-radius:6px; cursor:pointer;">
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+
+        {{-- Botón enviar --}}
+        <div>
+            <button type="button" onclick="enviarSolicitud()"
+                style="padding:12px 28px; background:#f59e0b; border:none; border-radius:10px; color:#fff; font-size:14px; font-weight:700; cursor:pointer;"
+                onmouseover="this.style.background='#d97706'" onmouseout="this.style.background='#f59e0b'">
+                Enviar solicitud de inscripción
+            </button>
+        </div>
+    </form>
 </div>
 
-<script>
-document.querySelectorAll('.curso-radio').forEach(radio => {
-    radio.addEventListener('change', () => {
-        document.querySelectorAll('.curso-card').forEach(c => {
-            c.style.borderColor = '#e5e7eb';
-            c.style.background  = '#ffffff';
-        });
-        radio.nextElementSibling.style.borderColor = '#f59e0b';
-        radio.nextElementSibling.style.background  = '#fefce8';
-    });
-});
-</script>
+@push('scripts')
+@vite('resources/js/alumno/inscripcion.js')
+@endpush

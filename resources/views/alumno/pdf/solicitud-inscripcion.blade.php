@@ -45,7 +45,7 @@
 
     <div class="campo">
         <div class="campo-label">Nombre completo del alumno</div>
-        <div class="campo-valor">{{ $alumno->nombre }} {{ $alumno->apellido }}</div>
+        <div class="campo-valor">{{ $alumno->nombre_completo }}</div>
     </div>
 
     <div class="grid-2">

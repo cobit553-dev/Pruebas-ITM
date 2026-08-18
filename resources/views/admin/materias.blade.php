@@ -36,7 +36,7 @@
                     onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
             </div>
             <p id="contadorMaterias" style="font-size:12px; color:#9ca3af; margin:0;"></p>
-            <button onclick="limpiarBusqueda()"
+            <button onclick="limpiarBusquedaMaterias()"
                 style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:12px; padding:8px 14px; border-radius:8px; cursor:pointer;"
                 onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
                 ✕ Limpiar
@@ -57,7 +57,7 @@
                             <th style="padding:11px 24px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Código</th>
                             <th style="padding:11px 24px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Nombre</th>
                             <th style="padding:11px 24px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Estado</th>
-                            <th style="padding:11px 24px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Acciones</th>
+
                         </tr>
                     </thead>
                     <tbody id="tablaBody">
@@ -73,29 +73,23 @@
                                 {{ $materia->nombre }}
                             </td>
                             <td style="padding:13px 24px;">
-                                @if(isset($materia->activa) && $materia->activa)
-                                    <span style="background:#f0fdf4; color:#16a34a; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600;">● Activa</span>
-                                @else
-                                    <span style="background:#fef2f2; color:#dc2626; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600;">● Inactiva</span>
-                                @endif
+                                <span onclick="toggleEstado(this, {{ $materia->id }}, {{ $materia->activa ? 1 : 0 }}, '{{ route('admin.materias.toggle', $materia->id) }}')"
+                                    title="Clic para cambiar estado"
+                                    style="display:inline-block; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; user-select:none;
+                                    @if(isset($materia->activa) && $materia->activa)
+                                        background:#f0fdf4; color:#16a34a;
+                                    @else
+                                        background:#fef2f2; color:#dc2626;
+                                    @endif
+                                    ">
+                                    ● {{ $materia->activa ? 'Activa' : 'Inactiva' }}
+                                </span>
                             </td>
-                            <td style="padding:13px 24px; text-align:center;">
-                                <button
-                                    onclick="abrirModal(
-                                        {{ $materia->id }},
-                                        '{{ $materia->codigo ?? 'MAT-'.str_pad($materia->id, 3, '0', STR_PAD_LEFT) }}',
-                                        '{{ addslashes($materia->nombre) }}',
-                                        '{{ isset($materia->activa) && $materia->activa ? 1 : 0 }}'
-                                    )"
-                                    style="background:#f3f4f6; border:none; color:#374151; cursor:pointer; font-size:12px; font-weight:600; padding:5px 14px; border-radius:6px;"
-                                    onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
-                                    Editar
-                                </button>
-                            </td>
+
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" style="padding:40px; text-align:center; color:#9ca3af; font-size:13px;">
+                            <td colspan="3" style="padding:40px; text-align:center; color:#9ca3af; font-size:13px;">
                                 No hay materias registradas.
                             </td>
                         </tr>
@@ -110,72 +104,12 @@
         </div>
     </div>
 </div>
-{{-- Modal editar materia desde archivo separado --}}
-@include('admin.partials.modal-editar-materia')
 
 {{-- Modal nueva materia desde archivo separado --}}
 @include('admin.partials.modal-nueva-materia')
 
-<script>
-// ── Modal Nueva Materia ──────────────────────────
-function abrirModalMateria() {
-    document.getElementById('modalNuevaMateria').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalMateria() {
-    document.getElementById('modalNuevaMateria').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('modalNuevaMateria').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModalMateria();
-    });
-
-    // ── Modal Editar Materia ──────────────────────
-    document.getElementById('modalEditar').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModal();
-    });
-});
-
-// ── Modal Editar ────────────────────────────────
-function abrirModal(id, codigo, nombre, activa) {
-    document.getElementById('modalId').value     = id;
-    document.getElementById('modalCodigo').value = codigo;
-    document.getElementById('modalNombre').value = nombre;
-    document.getElementById('modalEstado').value = activa;
-    document.getElementById('modalEditar').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModal() {
-    document.getElementById('modalEditar').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-function guardarMateria() {
-    cerrarModal();
-}
-
-// ── Buscador ────────────────────────────────────
-function filtrarMaterias() {
-    const texto  = document.getElementById('buscadorMateria').value.toLowerCase().trim();
-    const filas  = document.querySelectorAll('.fila-materia');
-    let visibles = 0;
-    filas.forEach(fila => {
-        const nombre = fila.dataset.nombre;
-        if (!texto || nombre.includes(texto)) { fila.style.display = ''; visibles++; }
-        else { fila.style.display = 'none'; }
-    });
-    document.getElementById('sinResultados').style.display = visibles === 0 && texto ? 'block' : 'none';
-    document.getElementById('contadorMaterias').textContent = texto ? visibles + ' resultado(s)' : '';
-}
-
-function limpiarBusqueda() {
-    document.getElementById('buscadorMateria').value = '';
-    document.getElementById('contadorMaterias').textContent = '';
-    filtrarMaterias();
-}
-</script>
+@push('scripts')
+@vite('resources/js/admin/materias.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

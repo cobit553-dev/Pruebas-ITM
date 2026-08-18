@@ -15,6 +15,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.alumnos');
     Route::post('/admin/alumnos', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'storeAlumno'])
         ->name('admin.alumnos.store');
+    Route::post('/admin/alumnos/siguiente-codigo', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'siguienteCodigo'])
+        ->name('admin.alumnos.siguienteCodigo');
 
     // ADMINISTRADOR: Maestros
     Route::get('/admin/maestros', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'maestros'])
@@ -22,12 +24,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/admin/maestros', [\App\Http\Controllers\Admin\MaestroController::class, 'store'])
         ->name('admin.maestros.store');
+    Route::post('/admin/maestros/siguiente-codigo', [\App\Http\Controllers\Admin\MaestroController::class, 'siguienteCodigoMaestro'])
+        ->name('admin.maestros.siguienteCodigo');
+
+    Route::put('/admin/maestros/{id}', [\App\Http\Controllers\Admin\MaestroController::class, 'update'])
+        ->name('admin.maestros.update');
 
     // ADMINISTRADOR: Materias
     Route::get('/admin/materias', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'materias'])
         ->name('admin.materias');
     Route::post('/admin/materias', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'storeMateria'])
         ->name('admin.materias.store');
+    Route::post('/admin/materias/siguiente-codigo', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'siguienteCodigoMateria'])
+        ->name('admin.materias.siguienteCodigo');
+    Route::patch('/admin/materias/{materia}/toggle', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'toggleMateria'])
+        ->name('admin.materias.toggle');
 
     // ADMINISTRADOR: Secciones
     Route::get('/admin/secciones', [\App\Http\Controllers\Admin\SeccionController::class, 'index'])
@@ -77,6 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mensualidades', [\App\Http\Controllers\Admin\MensualidadController::class, 'index'])->name('admin.mensualidades');
     Route::post('/mensualidades/generar', [\App\Http\Controllers\Admin\MensualidadController::class, 'generar'])->name('admin.mensualidades.generar');
     Route::post('/mensualidades/{id}/pagar', [\App\Http\Controllers\Admin\MensualidadController::class, 'pagar'])->name('admin.mensualidades.pagar');
+    Route::post('/mensualidades/pagar-lote', [\App\Http\Controllers\Admin\MensualidadController::class, 'pagarLote'])->name('admin.mensualidades.pagarLote');
     Route::post('/mensualidades/{id}/revertir', [\App\Http\Controllers\Admin\MensualidadController::class, 'revertir'])->name('admin.mensualidades.revertir');
 
     // ADMINISTRADOR: Pagos
@@ -100,6 +112,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/alumnos/{id}', [App\Http\Controllers\Admin\AdminDashboardController::class, 'updateAlumno'])->name('admin.alumnos.update');
 
-
+    // ADMINISTRADOR: Asistencias
+    Route::get('/admin/asistencias', [App\Http\Controllers\Admin\AsistenciaController::class, 'index'])
+        ->name('admin.asistencias');
 
 });

@@ -35,7 +35,7 @@
                     onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
             </div>
             <p id="contadorMaestros" style="font-size:12px; color:#9ca3af; margin:0;"></p>
-            <button onclick="limpiarBusqueda()"
+            <button onclick="limpiarBusquedaMaestros()"
                 style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:12px; padding:8px 14px; border-radius:8px; cursor:pointer;"
                 onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
                 ✕ Limpiar
@@ -103,14 +103,15 @@
                                     <span style="background:#fef2f2; color:#dc2626; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600;">● Inactivo</span>
                                 @endif
                             </td>
-                            <td style="padding:13px 24px; text-align:center; display:flex; gap:6px; justify-content:center;">
+<td style="padding:13px 24px; text-align:center; display:flex; gap:6px; justify-content:center;">
                                 <a href="{{ route('admin.maestros.show', $maestro->id) }}"
-                                   style="background:#111827; border:none; color:#fff; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px; text-decoration:none;"
-                                   onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
+                                    style="background:#111827; border:none; color:#fff; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px; text-decoration:none;"
+                                    onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
                                     Asignar cursos
                                 </a>
-                                <button style="background:#f3f4f6; border:none; color:#374151; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px;"
-                                    onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
+                                <button onclick="abrirModalEditarMaestro({{ $maestro->id }}, '{{ addslashes($maestro->nombre) }}', '{{ addslashes($maestro->apellido) }}', '{{ $maestro->codigo }}', '{{ addslashes($maestro->user->email ?? '') }}')"
+                                    style="background:#eff6ff; border:none; color:#3b82f6; cursor:pointer; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px;"
+                                    onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
                                     Editar
                                 </button>
                             </td>
@@ -118,8 +119,8 @@
                         @empty
                         <tr>
                             <td colspan="5" style="padding:40px; text-align:center; color:#9ca3af; font-size:13px;">No hay maestros registrados.</td>
-                        </tr>
-                        @endforelse
+</tr>
+                    @endforelse
                     </tbody>
                 </table>
 
@@ -131,50 +132,11 @@
     </div>
 </div>
 
-<script>
-function filtrarMaestros() {
-    const texto  = document.getElementById('buscadorMaestro').value.toLowerCase().trim();
-    const filas  = document.querySelectorAll('.fila-maestro');
-    let visibles = 0;
-
-    filas.forEach(fila => {
-        const nombre = fila.dataset.nombre;
-        if (!texto || nombre.includes(texto)) {
-            fila.style.display = '';
-            visibles++;
-        } else {
-            fila.style.display = 'none';
-        }
-    });
-
-    document.getElementById('sinResultados').style.display = visibles === 0 && texto ? 'block' : 'none';
-    document.getElementById('contadorMaestros').textContent = texto ? visibles + ' resultado(s)' : '';
-}
-
-function limpiarBusqueda() {
-    document.getElementById('buscadorMaestro').value = '';
-    document.getElementById('contadorMaestros').textContent = '';
-    filtrarMaestros();
-}
-</script>
-
 @include('admin.partials.modal-nuevo-maestro')
+@include('admin.partials.modal-editar-maestro')
 
-<script>
-function abrirModalMaestro() {
-    document.getElementById('modalNuevoMaestro').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalMaestro() {
-    document.getElementById('modalNuevoMaestro').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('modalNuevoMaestro').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModalMaestro();
-    });
-});
-</script>
+@push('scripts')
+@vite('resources/js/admin/maestros.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

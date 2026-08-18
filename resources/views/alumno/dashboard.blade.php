@@ -33,7 +33,7 @@
             <div class="banner-warning">
                 <div>
                     <h3 style="font-size:16px; font-weight:700; color:#b45309; margin:0 0 4px;">Bienvenido, {{ $alumno->nombre }}</h3>
-                    <p style="font-size:13px; color:#92400e; margin:0;">Ciclo escolar 2026 · I.T.M. Aguilares</p>
+                     <p style="font-size:13px; color:#92400e; margin:0;">Ciclo escolar {{ now()->year }} · I.T.M. Aguilares</p>
                 </div>
                 <div style="display:flex; gap:12px;">
                     <div class="banner-stat banner-stat-warning">

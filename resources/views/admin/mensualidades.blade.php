@@ -15,6 +15,17 @@
                 </div>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
+                <form method="GET" action="{{ route('admin.mensualidades') }}" style="display:flex; align-items:center; gap:8px;">
+                    <select name="anio" onchange="this.form.submit()"
+                        style="padding:6px 10px; font-size:12px; border:1px solid #e5e7eb; border-radius:8px; background:#f9fafb; color:#111827; outline:none; cursor:pointer; font-weight:600;">
+                        @foreach($aniosDisponibles as $a)
+                        <option value="{{ $a }}" {{ $a == $anioSeleccionado ? 'selected' : '' }}>
+                            Ciclo {{ $a }} {{ $a == date('Y') ? '(actual)' : '' }}
+                        </option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="anio" value="{{ $anioSeleccionado }}">
+                </form>
                 <span style="font-size:12px; color:#9ca3af; background:#f3f4f6; padding:6px 12px; border-radius:8px;">{{ now()->isoFormat('MMMM YYYY') }}</span>
                 <button onclick="abrirModalGenerar()"
                     style="background:#111827; border:none; padding:8px 16px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;"
@@ -25,17 +36,10 @@
         </header>
 
         <div style="flex:1; overflow-y:auto; padding:24px;">
-
-            @if(session('success'))
-            <div style="background:#dcfce7; border:1px solid #86efac; border-radius:10px; padding:12px 16px; font-size:13px; color:#16a34a; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                {{ session('success') }}
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 16px; font-size:13px; color:#dc2626; margin-bottom:16px;">
-                {{ session('error') }}
+            @if($anioSeleccionado != date('Y'))
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; font-size:13px; color:#1e40af; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Estás viendo el ciclo {{ $anioSeleccionado }}. <a href="{{ route('admin.mensualidades') }}" style="color:#1e40af; font-weight:600; text-decoration:underline;">Ver ciclo actual</a>
             </div>
             @endif
 
@@ -56,7 +60,7 @@
                     </div>
                     <div>
                         <p style="font-size:22px; font-weight:700; color:#111827; margin:0;">${{ number_format($totalPagado, 2) }}</p>
-                        <p style="font-size:12px; color:#6b7280; margin:0;">Total cobrado</p>
+                        <p style="font-size:12px; color:#6b7280; margin:0;">Total cobrado · Ciclo {{ $anioSeleccionado }}</p>
                     </div>
                 </div>
                 <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; padding:16px 20px; display:flex; align-items:center; gap:14px;">
@@ -65,7 +69,7 @@
                     </div>
                     <div>
                         <p style="font-size:22px; font-weight:700; color:#111827; margin:0;">${{ number_format($totalPendiente, 2) }}</p>
-                        <p style="font-size:12px; color:#6b7280; margin:0;">Pendiente de cobro</p>
+                        <p style="font-size:12px; color:#6b7280; margin:0;">Pendiente de cobro · Ciclo {{ $anioSeleccionado }}</p>
                     </div>
                 </div>
             </div>
@@ -99,7 +103,7 @@
                     <option value="Pendiente">Pendiente</option>
                     <option value="Pagado">Pagado</option>
                 </select>
-                <button onclick="limpiarFiltros()"
+                <button onclick="limpiarFiltrosMensualidades()"
                     style="padding:8px 14px; background:none; border:1px solid #e5e7eb; border-radius:8px; font-size:12px; color:#6b7280; cursor:pointer;"
                     onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
                     ✕ Limpiar
@@ -127,6 +131,11 @@
                 <table style="width:100%; border-collapse:collapse;">
                     <thead>
                         <tr style="background:#fafafa; border-bottom:1px solid #e5e7eb;">
+                            <th style="padding:10px 8px 10px 20px; width:36px; text-align:center;">
+                                <input type="checkbox" class="chk-curso" data-curso="{{ $curso->id }}"
+                                    title="Seleccionar todas las pendientes de este curso"
+                                    style="width:15px; height:15px; cursor:pointer; accent-color:#111827;">
+                            </th>
                             <th style="padding:10px 20px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Alumno</th>
                             <th style="padding:10px 20px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Mes</th>
                             <th style="padding:10px 20px; text-align:center; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase;">Monto</th>
@@ -137,20 +146,24 @@
                     </thead>
                     <tbody>
                         @foreach($inscripciones as $ins)
-                        @php
-                            $mensualidadesAlumno = \App\Models\Mensualidad::where('alumno_id', $ins->alumno_id)
-                                ->orderByRaw("FIELD(mes, 'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre')")
-                                ->get();
-                        @endphp
+                        @php $mensualidadesAlumno = $mensualidadesPorAlumno[$ins->alumno_id] ?? collect(); @endphp
                         @if($mensualidadesAlumno->count() > 0)
                             @foreach($mensualidadesAlumno as $m)
                             <tr class="fila-mensualidad"
                                 data-nombre="{{ strtolower($ins->alumno->nombre_completo) }}"
                                 data-curso="{{ $curso->id }}"
-                                data-mes="{{ $m->mes }}"
+                                data-mes="{{ $m->nombre_mes }}"
                                 data-estado="{{ $m->estado }}"
                                 style="border-top:1px solid #f1f5f9; background:{{ $loop->even ? '#f8fafc' : '#ffffff' }};"
                                 onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='{{ $loop->even ? '#f8fafc' : '#ffffff' }}'">
+                                <td style="padding:11px 8px 11px 20px; text-align:center;">
+                                    @if($m->estado === 'Pendiente')
+                                    <input type="checkbox" class="chk-mensualidad" form="formLote"
+                                        name="ids[]" value="{{ $m->id }}"
+                                        data-monto="{{ $m->monto }}" data-curso="{{ $curso->id }}"
+                                        style="width:15px; height:15px; cursor:pointer; accent-color:#16a34a;">
+                                    @endif
+                                </td>
                                 <td style="padding:11px 20px;">
                                     <div style="display:flex; align-items:center; gap:8px;">
                                         <div style="width:28px; height:28px; border-radius:50%; background:#111827; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700; flex-shrink:0;">
@@ -159,7 +172,7 @@
                                         <span style="font-size:13px; font-weight:500; color:#111827;">{{ $ins->alumno->nombre_completo }}</span>
                                     </div>
                                 </td>
-                                <td style="padding:11px 20px; font-size:13px; color:#374151; font-weight:500;">{{ $m->mes }}</td>
+                                <td style="padding:11px 20px; font-size:13px; color:#374151; font-weight:500;">{{ $m->nombre_mes }}</td>
                                 <td style="padding:11px 20px; text-align:center; font-size:13px; font-weight:600; color:#111827;">${{ number_format($m->monto, 2) }}</td>
                                 <td style="padding:11px 20px; text-align:center;">
                                     @if($m->estado === 'Pagado')
@@ -174,23 +187,29 @@
                                 <td style="padding:11px 20px; text-align:center;">
                                     @if($m->estado === 'Pendiente')
                                     {{-- Cobrar --}}
-                                    <form method="POST" action="{{ route('admin.mensualidades.pagar', $m->id) }}">
+                                    <form method="POST" action="{{ route('admin.mensualidades.pagar', $m->id) }}"
+                                          data-confirm="¿Registrar pago de ${{ number_format($m->monto, 2) }} para {{ addslashes($ins->alumno->nombre_completo) }}?"
+                                          data-confirm-titulo="Registrar pago"
+                                          data-confirm-boton="Sí, cobrar"
+                                          data-confirm-tipo="exito">
                                         @csrf
                                         <button type="submit"
                                             style="background:#f0fdf4; border:1px solid #86efac; color:#16a34a; font-size:12px; font-weight:600; padding:5px 14px; border-radius:6px; cursor:pointer;"
-                                            onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'"
-                                            onclick="return confirm('¿Registrar pago de $25.00 para {{ addslashes($ins->alumno->nombre) }}?')">
+                                            onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">
                                             ✓ Cobrar
                                         </button>
                                     </form>
                                     @else
                                     {{-- Revertir --}}
-                                    <form method="POST" action="{{ route('admin.mensualidades.revertir', $m->id) }}">
+                                    <form method="POST" action="{{ route('admin.mensualidades.revertir', $m->id) }}"
+                                          data-confirm="¿Revertir el pago de {{ addslashes($ins->alumno->nombre_completo) }} ({{ $m->mes }})? Volverá a estado Pendiente."
+                                          data-confirm-titulo="Revertir pago"
+                                          data-confirm-boton="Sí, revertir"
+                                          data-confirm-tipo="peligro">
                                         @csrf
                                         <button type="submit"
                                             style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; font-size:12px; font-weight:600; padding:5px 14px; border-radius:6px; cursor:pointer;"
-                                            onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'"
-                                            onclick="return confirm('¿Revertir el pago de {{ addslashes($ins->alumno->nombre) }} ({{ $m->mes }})? Volverá a estado Pendiente.')">
+                                            onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
                                             ↩ Revertir
                                         </button>
                                     </form>
@@ -205,6 +224,7 @@
                                 data-mes=""
                                 data-estado=""
                                 style="border-top:1px solid #f1f5f9; background:#ffffff;">
+                                <td style="padding:11px 8px 11px 20px;"></td>
                                 <td style="padding:11px 20px;">
                                     <div style="display:flex; align-items:center; gap:8px;">
                                         <div style="width:28px; height:28px; border-radius:50%; background:#d1d5db; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:700; flex-shrink:0;">
@@ -233,111 +253,137 @@
     </div>
 </div>
 
-@include('admin.partials.modal-generar-mensualidades')
+{{-- ═══════════════════════════════════════════════════════════ --}}
+{{-- BARRA FLOTANTE: COBRO EN LOTE --}}
+{{-- ═══════════════════════════════════════════════════════════ --}}
+<form id="formLote" method="POST" action="{{ route('admin.mensualidades.pagarLote') }}"
+    onsubmit="return prepararCobroLote(event)"
+    style="display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:150;
+           background:#111827; border-radius:14px; padding:12px 18px; box-shadow:0 10px 30px rgba(0,0,0,0.25);
+           align-items:center; gap:16px;">
+    @csrf
+    <p style="font-size:13px; color:#ffffff; margin:0; font-weight:600;">
+        <span id="loteCantidad">0</span> seleccionadas ·
+        <span id="loteTotal" style="color:#4ade80;">$0.00</span>
+    </p>
+    <button type="submit"
+        style="background:#16a34a; border:none; color:#fff; font-size:13px; font-weight:600; padding:8px 18px; border-radius:8px; cursor:pointer;"
+        onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
+        ✓ Cobrar seleccionadas
+    </button>
+    <button type="button" onclick="limpiarSeleccionLote()"
+        style="background:none; border:1px solid #4b5563; color:#d1d5db; font-size:12px; font-weight:600; padding:8px 14px; border-radius:8px; cursor:pointer;"
+        onmouseover="this.style.background='#1f2937'" onmouseout="this.style.background='none'">
+        Cancelar
+    </button>
+</form>
 
 <script>
-function abrirModalGenerar() {
-    document.getElementById('modalGenerar').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalGenerar() {
-    document.getElementById('modalGenerar').style.display = 'none';
-    document.body.style.overflow = '';
-    toggleAlumno('todos');
-    document.getElementById('filtroCursoModal').value = '';
-    filtrarAlumnosModal();
-}
-
-function toggleAlumno(tipo) {
-    const esUno = tipo === 'uno';
-    document.getElementById('radioTodos').checked = !esUno;
-    document.getElementById('radioUno').checked   =  esUno;
-    document.getElementById('selectAlumnoDiv').style.display = esUno ? 'block' : 'none';
-    document.getElementById('selectAlumno').required         =  esUno;
-    document.getElementById('btnTodos').style.borderColor = esUno ? '#e5e7eb' : '#111827';
-    document.getElementById('btnTodos').style.background  = esUno ? '#ffffff'  : '#f3f4f6';
-    document.getElementById('btnTodos').style.color       = esUno ? '#6b7280'  : '#111827';
-    document.getElementById('btnUno').style.borderColor = esUno ? '#111827' : '#e5e7eb';
-    document.getElementById('btnUno').style.background  = esUno ? '#f3f4f6'  : '#ffffff';
-    document.getElementById('btnUno').style.color       = esUno ? '#111827'  : '#6b7280';
-}
-
-function filtrarAlumnosModal() {
-    const cursoId = document.getElementById('filtroCursoModal').value;
-    const select  = document.getElementById('selectAlumno');
-    const options = select.querySelectorAll('option[data-curso]');
-    const msg     = document.getElementById('sinAlumnosMsg');
-    let visibles  = 0;
-
-    select.value = '';
-
-    options.forEach(opt => {
-        if (!cursoId || opt.dataset.curso === cursoId) {
-            opt.style.display = '';
-            visibles++;
-        } else {
-            opt.style.display = 'none';
-        }
-    });
-
-    const placeholder = select.querySelector('option[value=""]');
-    if (!cursoId) {
-        placeholder.textContent = '— Selecciona un curso primero —';
-    } else if (visibles === 0) {
-        placeholder.textContent = '— Sin alumnos en este curso —';
-    } else {
-        placeholder.textContent = '— Seleccionar alumno —';
+    // ═══════════════════════════════════════════════════════════
+    // COBRO EN LOTE de mensualidades
+    // ═══════════════════════════════════════════════════════════
+    function filaVisible(chk) {
+        const tr = chk.closest('tr');
+        return tr && tr.offsetParent !== null;
     }
 
-    msg.style.display = (cursoId && visibles === 0) ? 'block' : 'none';
-}
+    function actualizarBarraLote() {
+        const marcadas = Array.from(document.querySelectorAll('.chk-mensualidad:checked')).filter(filaVisible);
+        const total    = marcadas.reduce((s, c) => s + parseFloat(c.dataset.monto || 0), 0);
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('modalGenerar').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModalGenerar();
-    });
-});
+        const barra = document.getElementById('formLote');
+        barra.style.display = marcadas.length > 0 ? 'flex' : 'none';
+        document.getElementById('loteCantidad').textContent = marcadas.length;
+        document.getElementById('loteTotal').textContent    = '$' + total.toFixed(2);
 
-function filtrarMensualidades() {
-    const nombre  = document.getElementById('buscarAlumno').value.toLowerCase().trim();
-    const curso   = document.getElementById('filtrarCurso').value;
-    const mes     = document.getElementById('filtrarMes').value;
-    const estado  = document.getElementById('filtrarEstado').value;
-    const filas   = document.querySelectorAll('.fila-mensualidad');
-    const grupos  = document.querySelectorAll('.grupo-curso');
-    let visibles  = 0;
+        // Sincronizar checkbox maestro de cada curso
+        document.querySelectorAll('.chk-curso').forEach(master => {
+            const delCurso = Array.from(document.querySelectorAll('.chk-mensualidad[data-curso="' + master.dataset.curso + '"]')).filter(filaVisible);
+            master.checked = delCurso.length > 0 && delCurso.every(c => c.checked);
+        });
+    }
 
-    filas.forEach(fila => {
-        const okNombre = !nombre || fila.dataset.nombre.includes(nombre);
-        const okCurso  = !curso  || fila.dataset.curso === curso;
-        const okMes    = !mes    || fila.dataset.mes === mes;
-        const okEstado = !estado || fila.dataset.estado === estado;
-        if (okNombre && okCurso && okMes && okEstado) {
-            fila.style.display = '';
-            visibles++;
-        } else {
-            fila.style.display = 'none';
+    function limpiarSeleccionLote() {
+        document.querySelectorAll('.chk-mensualidad:checked, .chk-curso:checked').forEach(c => c.checked = false);
+        actualizarBarraLote();
+    }
+
+    function sincronizarSeleccionConFiltros() {
+        // Al filtrar, desmarcar lo que quedó oculto para no cobrarlo sin verlo
+        document.querySelectorAll('.chk-mensualidad:checked').forEach(c => {
+            if (!filaVisible(c)) c.checked = false;
+        });
+        actualizarBarraLote();
+    }
+
+    function prepararCobroLote(e) {
+        document.querySelectorAll('.chk-mensualidad:checked').forEach(c => {
+            if (!filaVisible(c)) c.checked = false;
+        });
+
+        const marcadas = document.querySelectorAll('.chk-mensualidad:checked');
+        if (marcadas.length === 0) {
+            e.preventDefault();
+            mostrarNotificacion('No hay mensualidades seleccionadas.', 'aviso');
+            return false;
+        }
+
+        const total = Array.from(marcadas).reduce((s, c) => s + parseFloat(c.dataset.monto || 0), 0);
+        e.preventDefault();
+        mostrarConfirmacion({
+            mensaje: '¿Registrar ' + marcadas.length + ' pago(s) por $' + total.toFixed(2) + '?',
+            titulo: 'Cobro en lote',
+            tipo: 'exito',
+            boton: 'Sí, cobrar'
+        }).then(result => {
+            if (result.isConfirmed) {
+                document.getElementById('formLote').submit();
+            }
+        });
+        return false;
+    }
+
+    document.addEventListener('change', function (e) {
+        // Checkbox individual
+        if (e.target.classList.contains('chk-mensualidad')) {
+            actualizarBarraLote();
+        }
+
+        // Checkbox maestro del curso: marca/desmarca las pendientes visibles del curso
+        if (e.target.classList.contains('chk-curso')) {
+            const marcar = e.target.checked;
+            document.querySelectorAll('.chk-mensualidad[data-curso="' + e.target.dataset.curso + '"]').forEach(c => {
+                if (filaVisible(c)) c.checked = marcar;
+            });
+            actualizarBarraLote();
         }
     });
 
-    grupos.forEach(grupo => {
-        const filasVisibles = grupo.querySelectorAll('.fila-mensualidad:not([style*="display: none"])');
-        grupo.style.display = filasVisibles.length === 0 ? 'none' : '';
+    // Integración con los filtros existentes (definidos en mensualidades.js):
+    // al filtrar o limpiar, la selección se sincroniza con lo visible
+    document.addEventListener('DOMContentLoaded', function () {
+        const filtrarOriginal = window.filtrarMensualidades;
+        if (typeof filtrarOriginal === 'function') {
+            window.filtrarMensualidades = function () {
+                filtrarOriginal();
+                sincronizarSeleccionConFiltros();
+            };
+        }
+
+        const limpiarOriginal = window.limpiarFiltrosMensualidades;
+        if (typeof limpiarOriginal === 'function') {
+            window.limpiarFiltrosMensualidades = function () {
+                limpiarOriginal();
+                actualizarBarraLote();
+            };
+        }
     });
-
-    const hayFiltro = nombre || curso || mes || estado;
-    document.getElementById('contadorMensualidades').textContent = hayFiltro ? visibles + ' resultado(s)' : '';
-}
-
-function limpiarFiltros() {
-    document.getElementById('buscarAlumno').value  = '';
-    document.getElementById('filtrarCurso').value  = '';
-    document.getElementById('filtrarMes').value    = '';
-    document.getElementById('filtrarEstado').value = '';
-    document.getElementById('contadorMensualidades').textContent = '';
-    document.querySelectorAll('.fila-mensualidad').forEach(f => f.style.display = '');
-    document.querySelectorAll('.grupo-curso').forEach(g => g.style.display = '');
-}
 </script>
+
+@include('admin.partials.modal-generar-mensualidades')
+
+@push('scripts')
+@vite('resources/js/admin/mensualidades.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

@@ -9,11 +9,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Alumno extends Model
 {
-    protected $fillable = ['user_id', 'nombre', 'apellido', 'codigo', 'fecha_nacimiento', 'genero', 'telefono', 'direccion', 'activo'];
+    protected $fillable = ['user_id', 'nombre', 'apellido', 'codigo', 'fecha_nacimiento', 'dui', 'genero', 'telefono', 'direccion', 'activo'];
 
     public function getNombreCompletoAttribute(): string
     {
         return "{$this->nombre} {$this->apellido}";
+    }
+
+    // ¿El alumno es mayor de edad? (basado en fecha de nacimiento)
+    public function getEsMayorDeEdadAttribute(): bool
+    {
+        if (! $this->fecha_nacimiento) {
+            return false;
+        }
+
+        return \Carbon\Carbon::parse($this->fecha_nacimiento)->age >= 18;
     }
 
     public function inscripciones(): HasMany
@@ -29,6 +39,13 @@ class Alumno extends Model
     public function cursos(): BelongsToMany
     {
         return $this->belongsToMany(Curso::class, 'inscripciones');
+    }
+
+    public function encargados(): BelongsToMany
+    {
+        return $this->belongsToMany(Encargado::class, 'alumno_encargado', 'alumno_id', 'encargado_id')
+                    ->withPivot('parentesco')
+                    ->withTimestamps();
     }
 
     public function user(): BelongsTo

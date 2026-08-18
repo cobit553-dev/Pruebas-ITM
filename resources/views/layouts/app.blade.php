@@ -10,16 +10,22 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=dm-sans:400,500,600,700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
     <style>
         .fade-in { animation: fadeIn .25s ease; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #1e293b; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-</style>
+        .campo-secreto {
+            -webkit-text-security: disc;
+            text-security: disc;
+        }
+    </style>
 </head>
 <body class="font-sans" style="background:#0f172a; margin:0;">
     {{ $slot }}
+    @stack('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.querySelector('.sidebar.sidebar-scroll') || document.querySelector('aside[style*="overflow-y:auto"]');
@@ -32,6 +38,15 @@
                 sidebar.addEventListener('scroll', function() {
                     localStorage.setItem(scrollKey, this.scrollTop);
                 });
+            }
+
+            if (typeof window.mostrarNotificacion === 'function') {
+                @if(session('success'))
+                window.mostrarNotificacion("{{ session('success') }}", "exito");
+                @endif
+                @if(session('error'))
+                window.mostrarNotificacion("{{ session('error') }}", "peligro");
+                @endif
             }
         });
     </script>

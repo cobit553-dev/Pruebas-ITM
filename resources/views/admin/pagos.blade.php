@@ -10,7 +10,7 @@
                 </div>
                 <div>
                     <h2 style="font-size:16px; font-weight:700; margin:0; color:#111827;">Historial de Pagos</h2>
-                    <p style="font-size:12px; color:#6b7280; margin:0;" id="contadorHeader">{{ $pagos->count() }} pagos registrados</p>
+                    <p style="font-size:12px; color:#6b7280; margin:0;" id="contadorHeader" data-total="{{ $pagos->count() }} pagos registrados">{{ $pagos->count() }} pagos registrados</p>
                 </div>
             </div>
             <span style="font-size:12px; color:#9ca3af; background:#f3f4f6; padding:6px 12px; border-radius:8px;">{{ now()->isoFormat('MMMM YYYY') }}</span>
@@ -77,7 +77,7 @@
                     <option value="{{ $mes }}">{{ $mes }}</option>
                     @endforeach
                 </select>
-                <button onclick="limpiarFiltros()"
+                <button onclick="limpiarFiltrosPagos()"
                     style="padding:8px 14px; background:none; border:1px solid #e5e7eb; border-radius:8px; font-size:12px; color:#6b7280; cursor:pointer;"
                     onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
                     ✕ Limpiar
@@ -171,41 +171,11 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 </div>
 
-<script>
-function filtrarPagos() {
-    const nombre  = document.getElementById('buscarAlumno').value.toLowerCase().trim();
-    const mes     = document.getElementById('filtrarMes').value;
-    const filas   = document.querySelectorAll('.fila-pago');
-    let visibles  = 0;
-
-    filas.forEach(fila => {
-        const okNombre = !nombre || fila.dataset.nombre.includes(nombre);
-        const okMes    = !mes    || fila.dataset.mes === mes;
-
-        if (okNombre && okMes) {
-            fila.style.display = '';
-            visibles++;
-        } else {
-            fila.style.display = 'none';
-        }
-    });
-
-    const hayFiltro = nombre || mes;
-    document.getElementById('sinResultados').style.display  = visibles === 0 && hayFiltro ? 'block' : 'none';
-    document.getElementById('contadorResultados').textContent = hayFiltro ? visibles + ' resultado(s)' : '';
-    document.getElementById('contadorHeader').textContent    = visibles + ' pagos registrados';
-}
-
-function limpiarFiltros() {
-    document.getElementById('buscarAlumno').value = '';
-    document.getElementById('filtrarMes').value   = '';
-    document.getElementById('contadorResultados').textContent = '';
-    document.getElementById('sinResultados').style.display = 'none';
-    document.querySelectorAll('.fila-pago').forEach(f => f.style.display = '');
-    document.getElementById('contadorHeader').textContent = '{{ $pagos->count() }} pagos registrados';
-}
-</script>
+@push('scripts')
+@vite('resources/js/admin/pagos.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

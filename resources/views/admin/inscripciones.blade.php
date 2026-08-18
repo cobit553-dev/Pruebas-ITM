@@ -19,20 +19,6 @@
         <div style="flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px;">
 
             {{-- Mensajes --}}
-            @if(session('success'))
-            <div style="background:#dcfce7; border:1px solid #86efac; border-radius:10px; padding:12px 16px; font-size:13px; color:#16a34a; display:flex; align-items:center; gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                {{ session('success') }}
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 16px; font-size:13px; color:#dc2626; display:flex; align-items:center; gap:8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                {{ session('error') }}
-            </div>
-            @endif
-
             {{-- Formulario nueva inscripción --}}
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:24px;">
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:18px;">
@@ -40,7 +26,7 @@
                     <p style="font-size:14px; font-weight:600; color:#111827; margin:0;">Nueva Inscripción</p>
                 </div>
 
-                <form method="POST" action="{{ route('admin.inscripciones.store') }}" style="display:grid; grid-template-columns:1fr 1fr auto; gap:12px; align-items:end;">
+                <form method="POST" action="{{ route('admin.inscripciones.store') }}" autocomplete="off" style="display:grid; grid-template-columns:1fr 1fr auto; gap:12px; align-items:end;">
                     @csrf
                     <div style="min-width:0;">
                         <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Alumno</label>
@@ -51,7 +37,7 @@
                             @foreach($alumnos as $alumno)
                             <option value="{{ $alumno->id }}"
                                 {{ in_array($alumno->id, $alumnosInscritos) ? 'disabled style=color:#9ca3af' : '' }}>
-                                {{ $alumno->nombre }} {{ $alumno->apellido }} — {{ $alumno->codigo }}
+                                {{ $alumno->nombre_completo }} — {{ $alumno->codigo }}
                                 {{ in_array($alumno->id, $alumnosInscritos) ? '(ya inscrito)' : '' }}
                             </option>
                             @endforeach
@@ -114,7 +100,7 @@
                                     <div style="width:32px; height:32px; border-radius:50%; background:#111827; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; font-weight:700; flex-shrink:0;">
                                         {{ strtoupper(substr($ins->alumno->nombre,0,1).substr($ins->alumno->apellido,0,1)) }}
                                     </div>
-                                    <span style="font-size:13px; font-weight:500; color:#111827;">{{ $ins->alumno->nombre }} {{ $ins->alumno->apellido }}</span>
+                                    <span style="font-size:13px; font-weight:500; color:#111827;">{{ $ins->alumno->nombre_completo }}</span>
                                 </div>
                             </td>
                             <td style="padding:13px 24px; font-size:13px; color:#6b7280; font-family:monospace;">{{ $ins->alumno->codigo }}</td>
@@ -133,7 +119,10 @@
                             <td style="padding:13px 24px; text-align:center;">
                                 @if($ins->activa)
                                 <form method="POST" action="{{ route('admin.inscripciones.desactivar', $ins->id) }}"
-                                    onsubmit="return confirm('¿Desactivar la inscripción de {{ $ins->alumno->nombre }}?')">
+                                      data-confirm="¿Desactivar la inscripción de {{ $ins->alumno->nombre }}?"
+                                      data-confirm-titulo="Desactivar inscripción"
+                                      data-confirm-boton="Sí, desactivar"
+                                      data-confirm-tipo="peligro">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

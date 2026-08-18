@@ -1,6 +1,3 @@
-{{-- ═══════════════════════════════════════════════════════════ --}}
-{{-- MODAL: EDITAR ALUMNO --}}
-{{-- ═══════════════════════════════════════════════════════════ --}}
 <div id="modalEditarAlumno" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; align-items:center; justify-content:center;">
     <div style="background:#ffffff; border-radius:16px; padding:28px; width:100%; max-width:540px; box-shadow:0 8px 32px rgba(0,0,0,0.12); margin:20px; max-height:90vh; overflow-y:auto;">
 
@@ -15,7 +12,7 @@
                 onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">✕</button>
         </div>
 
-        <form id="formEditarAlumno" method="POST" style="display:flex; flex-direction:column; gap:16px;">
+        <form id="formEditarAlumno" method="POST" autocomplete="off" style="display:flex; flex-direction:column; gap:16px;">
             @csrf
             @method('PUT')
             <input type="hidden" id="editId">
@@ -71,14 +68,14 @@
                             Nueva contraseña
                             <span style="color:#9ca3af; font-weight:400;">(opcional)</span>
                         </label>
-                        <input type="password" id="editPassword" name="password"
+                        <input type="text" class="campo-secreto" id="editPassword" name="password"
                             placeholder="Dejar vacío para no cambiar"
                             style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                             onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">
                     </div>
                     <div>
                         <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Confirmar contraseña</label>
-                        <input type="password" name="password_confirmation"
+                        <input type="text" class="campo-secreto" name="password_confirmation"
                             placeholder="Repetir nueva contraseña"
                             style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                             onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e7eb'">

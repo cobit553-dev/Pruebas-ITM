@@ -19,7 +19,6 @@
 
         @foreach([
             ['Alumnos',route('admin.alumnos'),'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'],
-            ['Encargados',route('admin.encargados'),'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'],
             ['Maestros',route('admin.maestros'),'M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z']
         ] as [$label,$href,$path])
         <a href="{{ $href }}" class="sidebar-link">
@@ -75,7 +74,7 @@
         <header class="page-header">
             <div>
                 <h2 style="font-size:17px; font-weight:700; margin:0; color:#0f172a;">Panel del Director</h2>
-                <p style="font-size:12px; color:#94a3b8; margin:0;">Ciclo escolar 2026 · I.T.M. Aguilares</p>
+                <p style="font-size:12px; color:#94a3b8; margin:0;">Ciclo escolar {{ now()->year }} · I.T.M. Aguilares</p>
             </div>
             <span style="font-size:12px; color:#94a3b8;">{{ now()->isoFormat('MMMM YYYY') }}</span>
         </header>
@@ -85,15 +84,15 @@
             <div class="banner-dark">
                 <div>
                     <h3 style="font-size:16px; font-weight:700; color:#ffffff; margin:0 0 4px;">Bienvenido, {{ Auth::user()->name }}</h3>
-                    <p style="font-size:13px; color:#94a3b8; margin:0;">Resumen del ciclo escolar 2026</p>
+                    <p style="font-size:13px; color:#94a3b8; margin:0;">Resumen del ciclo escolar {{ now()->year }}</p>
                 </div>
                 <div style="display:flex; gap:12px;">
                     <div class="banner-stat">
-                        <p style="font-size:22px; font-weight:700; color:#4ade80; margin:0;">87%</p>
+                        <p style="font-size:22px; font-weight:700; color:#4ade80; margin:0;">{{ $pagosAlDia }}%</p>
                         <p style="font-size:11px; color:#86efac; margin:0;">Pagos al día</p>
                     </div>
                     <div class="banner-stat">
-                        <p style="font-size:22px; font-weight:700; color:#4ade80; margin:0;">8.4</p>
+                        <p style="font-size:22px; font-weight:700; color:#4ade80; margin:0;">{{ $promedioGeneral !== null ? number_format($promedioGeneral, 1) : '—' }}</p>
                         <p style="font-size:11px; color:#86efac; margin:0;">Promedio general</p>
                     </div>
                 </div>
@@ -101,10 +100,10 @@
 
             <div class="card-grid-4">
                 @foreach([
-                    ['142','Alumnos inscritos','#dbeafe','#1d4ed8','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', route('admin.alumnos')],
-                    ['9','Maestros activos','#fef3c7','#b45309','M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5', route('admin.maestros')],
-                    ['13','Materias activas','#d1fae5','#065f46','M4 19.5A2.5 2.5 0 0 1 6.5 17H20', route('admin.materias')],
-                    ['18','Pagos pendientes','#fee2e2','#991b1b','M12 1v22', route('admin.pagos')],
+                    [$totalAlumnos,'Alumnos inscritos','#dbeafe','#1d4ed8','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', route('admin.alumnos')],
+                    [$totalMaestros,'Maestros activos','#fef3c7','#b45309','M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5', route('admin.maestros')],
+                    [$totalMaterias,'Materias activas','#d1fae5','#065f46','M4 19.5A2.5 2.5 0 0 1 6.5 17H20', route('admin.materias')],
+                    [$pagosPendientes,'Pagos pendientes','#fee2e2','#991b1b','M12 1v22', route('admin.pagos')],
                 ] as [$val,$label,$bg,$color,$path,$href])
                 <a href="{{ $href }}" style="text-decoration:none;">
                     <div class="stat-card-white">
@@ -125,21 +124,26 @@
                         <p style="font-size:14px; font-weight:600; color:#0f172a; margin:0;">Maestros activos</p>
                         <a href="{{ route('admin.maestros') }}" class="btn-link" style="color:#16a34a;">Gestionar</a>
                     </div>
-                    @php $i = 0; @endphp
-                    @foreach([
-                        ['CM','Carlos Mendoza','Windows, Word, Excel','#1d4ed8'],
-                        ['AL','Ana López','CorelDRAW, Photoshop, HTML','#7c3aed'],
-                    ] as [$ini,$nombre,$materias,$bg])
-                    <div style="display:flex; align-items:center; gap:12px; padding:12px 18px; {{ $i > 0 ? 'border-top:1px solid #f1f5f9;' : '' }}">
-                        @php $i++; @endphp
-                        <div class="icon-box-sm" style="background:{{ $bg }}; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0;">{{ $ini }}</div>
+                    @php $coloresAvatar = ['#1d4ed8', '#7c3aed', '#0f766e', '#b45309', '#be123c']; @endphp
+                    @forelse($maestrosActivos as $maestro)
+                    @php
+                        $materiasMaestro = $maestro->detalleCursos->pluck('materia.nombre')->filter()->unique()->implode(', ');
+                    @endphp
+                    <div style="display:flex; align-items:center; gap:12px; padding:12px 18px; {{ !$loop->first ? 'border-top:1px solid #f1f5f9;' : '' }}">
+                        <div class="icon-box-sm" style="background:{{ $coloresAvatar[$loop->index % count($coloresAvatar)] }}; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0;">
+                            {{ strtoupper(substr($maestro->nombre, 0, 1) . substr($maestro->apellido, 0, 1)) }}
+                        </div>
                         <div style="flex:1; overflow:hidden;">
-                            <p style="font-size:13px; font-weight:500; color:#0f172a; margin:0;">{{ $nombre }}</p>
-                            <p style="font-size:11px; color:#94a3b8; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $materias }}</p>
+                            <p style="font-size:13px; font-weight:500; color:#0f172a; margin:0;">{{ $maestro->nombre }} {{ $maestro->apellido }}</p>
+                            <p style="font-size:11px; color:#94a3b8; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $materiasMaestro ?: 'Sin materias asignadas' }}</p>
                         </div>
                         <span class="stat-badge-green">Activo</span>
                     </div>
-                    @endforeach
+                    @empty
+                    <div style="padding:20px 18px; text-align:center; color:#94a3b8; font-size:12px;">
+                        No hay maestros registrados.
+                    </div>
+                    @endforelse
                 </div>
 
                 <div class="card">
@@ -147,18 +151,19 @@
                         <p style="font-size:14px; font-weight:600; color:#0f172a; margin:0;">Estado de mensualidades</p>
                         <a href="{{ route('admin.mensualidades') }}" class="btn-link" style="color:#16a34a;">Ver detalle</a>
                     </div>
-                    @foreach([
-                        ['Enero 2026','Pagado','#d1fae5','#065f46'],
-                        ['Febrero 2026','Pagado','#d1fae5','#065f46'],
-                        ['Marzo 2026','Pagado','#d1fae5','#065f46'],
-                        ['Abril 2026','Pendiente','#fef3c7','#92400e'],
-                        ['Mayo 2026','Pendiente','#fef3c7','#92400e'],
-                    ] as [$mes,$estado,$bg,$color])
-                    <div style="display:flex; align-items:center; padding:10px 18px; border-top:1px solid #f8fafc;">
-                        <p style="font-size:13px; color:#334155; margin:0; flex:1;">{{ $mes }}</p>
-                        <span style="font-size:11px; background:{{ $bg }}; color:{{ $color }}; padding:3px 10px; border-radius:20px; font-weight:600;">{{ $estado }}</span>
+                    @forelse($estadoMensualidades as $m)
+                    <div style="display:flex; align-items:center; gap:10px; padding:10px 18px; border-top:1px solid #f8fafc;">
+                        <p style="font-size:13px; color:#334155; margin:0; flex:1;">{{ $m['mes'] }} {{ $m['anio'] }}</p>
+                        <span style="font-size:11px; color:#94a3b8;">{{ $m['pagadas'] }}/{{ $m['total'] }} pagadas</span>
+                        <span style="font-size:11px; background:{{ $m['completo'] ? '#d1fae5' : '#fef3c7' }}; color:{{ $m['completo'] ? '#065f46' : '#92400e' }}; padding:3px 10px; border-radius:20px; font-weight:600;">
+                            {{ $m['completo'] ? 'Pagado' : 'Pendiente' }}
+                        </span>
                     </div>
-                    @endforeach
+                    @empty
+                    <div style="padding:20px 18px; text-align:center; color:#94a3b8; font-size:12px;">
+                        Aún no se han generado mensualidades.
+                    </div>
+                    @endforelse
                 </div>
 
             </div>

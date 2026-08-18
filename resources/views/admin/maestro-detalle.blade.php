@@ -140,40 +140,8 @@
 @include('admin.partials.modal-nuevo-maestro')
 @include('admin.partials.modal-asignar-curso')
 
-<script>
-function abrirModalMaestro() {
-    document.getElementById('modalNuevoMaestro').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalMaestro() {
-    document.getElementById('modalNuevoMaestro').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('modalNuevoMaestro').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModalMaestro();
-    });
-});
-
-function filtrarMaestros() {
-    const texto  = document.getElementById('buscadorMaestro').value.toLowerCase().trim();
-    const filas  = document.querySelectorAll('.fila-maestro');
-    let visibles = 0;
-    filas.forEach(fila => {
-        const nombre = fila.dataset.nombre;
-        if (!texto || nombre.includes(texto)) { fila.style.display = ''; visibles++; }
-        else { fila.style.display = 'none'; }
-    });
-    document.getElementById('sinResultados').style.display = visibles === 0 && texto ? 'block' : 'none';
-    document.getElementById('contadorMaestros').textContent = texto ? visibles + ' resultado(s)' : '';
-}
-
-function limpiarBusqueda() {
-    document.getElementById('buscadorMaestro').value = '';
-    document.getElementById('contadorMaestros').textContent = '';
-    filtrarMaestros();
-}
-</script>
+@push('scripts')
+@vite('resources/js/admin/maestros.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

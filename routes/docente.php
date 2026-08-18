@@ -15,6 +15,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('docente.notas');
     Route::post('/docente/notas/guardar', [\App\Http\Controllers\Docente\NotasController::class, 'guardar'])
         ->name('docente.notas.guardar');
-        Route::get('/docente/asistencia', [\App\Http\Controllers\Docente\AsistenciaController::class, 'index'])->name('docente.asistencia');
+    Route::get('/docente/asistencia', [\App\Http\Controllers\Docente\AsistenciaController::class, 'index'])->name('docente.asistencia');
+    Route::post('/docente/asistencia/guardar', [\App\Http\Controllers\Docente\AsistenciaController::class, 'guardar'])->name('docente.asistencia.guardar');
+    Route::get('/docente/asistencia/reporte', [\App\Http\Controllers\Docente\AsistenciaController::class, 'reporte'])
+        ->name('docente.asistencia.reporte');
 
 });

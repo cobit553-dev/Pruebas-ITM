@@ -12,7 +12,7 @@
                 </div>
                 <div>
                     <h2 style="font-size:16px; font-weight:700; margin:0; color:#111827;">Gestión de Alumnos</h2>
-                    <p style="font-size:12px; color:#6b7280; margin:0;" id="contadorHeader">{{ $alumnos->count() }} alumnos inscritos</p>
+                    <p style="font-size:12px; color:#6b7280; margin:0;" id="contadorHeader" data-total="{{ $alumnos->count() }} alumnos inscritos">{{ $alumnos->count() }} alumnos inscritos</p>
                 </div>
             </div>
             <span style="font-size:12px; color:#9ca3af; background:#f3f4f6; padding:6px 12px; border-radius:8px;">{{ now()->isoFormat('MMMM YYYY') }}</span>
@@ -116,7 +116,7 @@
                             @endforeach
                         </select>
 
-                        <button onclick="limpiarFiltros()"
+                        <button onclick="limpiarFiltrosAlumnos()"
                             style="padding:8px 14px; background:none; border:1px solid #e5e7eb; border-radius:8px; font-size:12px; color:#6b7280; cursor:pointer; white-space:nowrap;"
                             onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
                             ✕ Limpiar
@@ -200,78 +200,8 @@
 @include('admin.partials.modal-nuevo-alumno')
 @include('admin.partials.modal-editar-alumno')
 
-<script>
-function abrirModalEditar(id, nombre, apellido, email, cursoId) {
-    document.getElementById('editId').value       = id;
-    document.getElementById('editNombre').value   = nombre;
-    document.getElementById('editApellido').value = apellido;
-    document.getElementById('editEmail').value    = email;
-    document.getElementById('editCurso').value    = cursoId;
-    document.getElementById('editPassword').value = '';
-    document.getElementById('formEditarAlumno').action = '/admin/alumnos/' + id;
-    document.getElementById('modalEditarAlumno').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalEditar() {
-    document.getElementById('modalEditarAlumno').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-function abrirModalNuevo() {
-    document.getElementById('modalNuevoAlumno').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalNuevo() {
-    document.getElementById('modalNuevoAlumno').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-function filtrarAlumnos() {
-    const nombre    = document.getElementById('buscarAlumno').value.toLowerCase().trim();
-    const curso     = document.getElementById('filtrarCurso').value.toLowerCase();
-    const anio      = document.getElementById('filtrarAnio').value;
-    const filas     = document.querySelectorAll('.fila-alumno');
-    let visibles    = 0;
-
-    filas.forEach(fila => {
-        const okNombre = !nombre || fila.dataset.nombre.includes(nombre);
-        const okCurso  = !curso  || fila.dataset.curso.includes(curso);
-        const okAnio   = !anio   || fila.dataset.anio === anio;
-
-        if (okNombre && okCurso && okAnio) {
-            fila.style.display = '';
-            visibles++;
-        } else {
-            fila.style.display = 'none';
-        }
-    });
-
-    const hayFiltro = nombre || curso || anio;
-    document.getElementById('sinResultados').style.display   = visibles === 0 && hayFiltro ? 'block' : 'none';
-    document.getElementById('contadorResultados').style.display = hayFiltro ? 'block' : 'none';
-    document.getElementById('contadorResultados').textContent   = hayFiltro ? visibles + ' alumno(s) encontrado(s)' : '';
-    document.getElementById('contadorHeader').textContent = visibles + ' alumno(s)';
-}
-
-function limpiarFiltros() {
-    document.getElementById('buscarAlumno').value = '';
-    document.getElementById('filtrarCurso').value = '';
-    document.getElementById('filtrarAnio').value  = '';
-    document.getElementById('sinResultados').style.display      = 'none';
-    document.getElementById('contadorResultados').style.display = 'none';
-    document.querySelectorAll('.fila-alumno').forEach(f => f.style.display = '');
-    document.getElementById('contadorHeader').textContent = '{{ $totalAlumnos }} alumnos inscritos';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('modalNuevoAlumno').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModalNuevo();
-    });
-    document.getElementById('modalEditarAlumno').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModalEditar();
-    });
-});
-</script>
+@push('scripts')
+@vite('resources/js/admin/alumnos.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

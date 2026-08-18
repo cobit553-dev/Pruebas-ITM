@@ -215,65 +215,8 @@ function promColor(int $p): string {
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const cursoId = document.getElementById('selectCurso').value;
-    if (cursoId) mostrarMaterias(cursoId);
-});
-
-function filtrarMaterias() {
-    const cursoId = document.getElementById('selectCurso').value;
-    const selectMateria = document.getElementById('selectMateria');
-    selectMateria.value = '';
-    if (!cursoId) {
-        selectMateria.querySelectorAll('option[data-curso]').forEach(o => o.style.display = 'none');
-        selectMateria.querySelector('option[value=""]').textContent = '-- Primero selecciona un curso --';
-        return;
-    }
-    mostrarMaterias(cursoId);
-}
-
-function mostrarMaterias(cursoId) {
-    const selectMateria = document.getElementById('selectMateria');
-    const options = selectMateria.querySelectorAll('option[data-curso]');
-    selectMateria.querySelector('option[value=""]').textContent = '-- Seleccionar materia --';
-    options.forEach(opt => {
-        opt.style.display = opt.dataset.curso === cursoId ? '' : 'none';
-    });
-}
-
-function submitFiltro() {
-    const detalleCursoId = document.getElementById('selectMateria').value;
-    if (!detalleCursoId) return;
-    document.getElementById('inputDetalleCursoId').value = detalleCursoId;
-    document.getElementById('filtroForm').submit();
-}
-
-function promColor(p) {
-    if (p >= 9) return '#10b981';
-    if (p >= 7) return '#f59e0b';
-    if (p >= 6) return '#f97316';
-    return '#ef4444';
-}
-
-function calcProm(row) {
-    const inputs = row.querySelectorAll('.nota-input');
-    const vals = [];
-    inputs.forEach(i => {
-        const v = parseFloat(i.value);
-        if (!isNaN(v) && i.value.trim() !== '') vals.push(Math.min(10, Math.max(0, v)));
-    });
-    const badge = document.getElementById('prom-' + row.dataset.alumno);
-    if (!vals.length) {
-        badge.textContent = '—';
-        badge.style.background = '#f3f4f6';
-        badge.style.color = '#9ca3af';
-        return;
-    }
-    const p = Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
-    badge.textContent = p;
-    badge.style.background = promColor(p);
-    badge.style.color = '#fff';
-}
-</script>
+@push('scripts')
+@vite('resources/js/docente/notas.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

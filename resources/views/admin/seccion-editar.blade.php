@@ -28,7 +28,7 @@
                 </div>
                 @endif
 
-                <form method="POST" action="{{ route('admin.secciones.update', $curso->id) }}" style="display:flex; flex-direction:column; gap:18px;">
+                <form method="POST" action="{{ route('admin.secciones.update', $curso->id) }}" autocomplete="off" style="display:flex; flex-direction:column; gap:18px;">
                     @csrf
                     @method('PUT')
 

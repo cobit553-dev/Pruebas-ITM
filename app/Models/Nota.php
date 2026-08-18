@@ -9,7 +9,7 @@ class Nota extends Model
 {
     protected $fillable = [
         'alumno_id', 'detalle_curso_id',
-        'laboratorio', 'examen_teorico', 'practica', 'sos',
+        'laboratorio', 'examen_teorico', 'practica', 'sos', 'conducta',
         'promedio', 'registrado_por'
     ];
 

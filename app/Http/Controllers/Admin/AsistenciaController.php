@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Asistencia;
+use App\Models\Curso;
+use App\Models\Maestro;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
+class AsistenciaController extends Controller
+{
+    public function index(Request $request)
+    {
+        $cursos = Curso::where('activo', true)->orderBy('nombre')->get();
+        $maestros = Maestro::where('activo', true)->orderBy('nombre')->get();
+
+        $cursoId = $request->input('curso_id');
+        $maestroId = $request->input('maestro_id');
+        $fechaDesde = $request->input('fecha_desde');
+        $fechaHasta = $request->input('fecha_hasta');
+
+        $asistencias = Asistencia::with(['alumno', 'curso', 'curso.detalleCursos.materia'])
+            ->when($cursoId, fn($q) => $q->where('curso_id', $cursoId))
+            ->when($maestroId, fn($q) => $q->whereHas('curso.detalleCursos', fn($q) => $q->where('maestro_id', $maestroId)))
+            ->when($fechaDesde, fn($q) => $q->whereDate('fecha', '>=', $fechaDesde))
+            ->when($fechaHasta, fn($q) => $q->whereDate('fecha', '<=', $fechaHasta))
+            ->orderBy('fecha', 'desc')
+            ->paginate(50)
+            ->appends($request->except('page'));
+
+        return view('admin.asistencias', compact(
+            'cursos', 'maestros', 'asistencias', 'cursoId', 'maestroId', 'fechaDesde', 'fechaHasta'
+        ));
+    }
+}

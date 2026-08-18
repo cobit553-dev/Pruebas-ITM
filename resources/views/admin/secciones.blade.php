@@ -46,7 +46,7 @@
 
             <p id="contadorCursos" style="font-size:12px; color:#9ca3af; margin:0; white-space:nowrap;"></p>
 
-            <button onclick="limpiarBusqueda()"
+            <button onclick="limpiarFiltrosCursos()"
                 style="background:none; border:1px solid #e5e7eb; color:#6b7280; font-size:12px; padding:8px 14px; border-radius:8px; cursor:pointer; white-space:nowrap;"
                 onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
                 ✕ Limpiar
@@ -108,54 +108,8 @@
 {{-- Modal nuevo curso desde archivo separado --}}
 @include('admin.partials.modal-nuevo-curso')
 
-<script>
-function abrirModalCurso() {
-    document.getElementById('modalNuevoCurso').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalCurso() {
-    document.getElementById('modalNuevoCurso').style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('modalNuevoCurso').addEventListener('click', function(e) {
-        if (e.target === this) cerrarModalCurso();
-    });
-});
-
-function filtrarCursos() {
-    const texto    = document.getElementById('buscadorCurso').value.toLowerCase().trim();
-    const turno    = document.getElementById('filtroTurno').value.toLowerCase();
-    const cards    = document.querySelectorAll('.card-curso');
-    let visibles   = 0;
-
-    cards.forEach(card => {
-        const nombre     = card.dataset.nombre;
-        const turnoCard  = card.dataset.turno;
-        const okNombre   = !texto || nombre.includes(texto);
-        const okTurno    = !turno || turnoCard.includes(turno);
-
-        if (okNombre && okTurno) {
-            card.style.display = '';
-            visibles++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    document.getElementById('sinResultados').style.display = visibles === 0 ? 'block' : 'none';
-
-    const contador = document.getElementById('contadorCursos');
-    contador.textContent = (texto || turno) ? visibles + ' curso(s) encontrado(s)' : '';
-}
-
-function limpiarBusqueda() {
-    document.getElementById('buscadorCurso').value = '';
-    document.getElementById('filtroTurno').value   = '';
-    document.getElementById('contadorCursos').textContent = '';
-    filtrarCursos();
-}
-</script>
+@push('scripts')
+@vite('resources/js/admin/secciones.js')
+@endpush
+<x-logout-modal />
 </x-app-layout>

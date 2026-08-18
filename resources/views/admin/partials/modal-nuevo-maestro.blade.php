@@ -15,20 +15,20 @@
                 onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">✕</button>
         </div>
 
-        <form method="POST" action="{{ route('admin.maestros.store') }}" style="display:flex; flex-direction:column; gap:16px;">
+        <form method="POST" action="{{ route('admin.maestros.store') }}" autocomplete="off" style="display:flex; flex-direction:column; gap:16px;">
             @csrf
 
             {{-- Nombre y Apellido --}}
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
                 <div>
                     <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Nombre <span style="color:#dc2626;">*</span></label>
-                    <input type="text" name="nombre" required placeholder="Ej: Carlos"
+                    <input type="text" name="nombre" id="nombreNuevoMaestro" required placeholder="Ej: Carlos"
                         style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                         onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
                 <div>
                     <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Apellido <span style="color:#dc2626;">*</span></label>
-                    <input type="text" name="apellido" required placeholder="Ej: Mendoza"
+                    <input type="text" name="apellido" id="apellidoNuevoMaestro" required placeholder="Ej: Mendoza"
                         style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                         onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
                 </div>
@@ -37,9 +37,11 @@
             {{-- Código --}}
             <div>
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Código <span style="color:#dc2626;">*</span></label>
-                <input type="text" name="codigo" required placeholder="Ej: M003"
-                    style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box; font-family:monospace;"
-                    onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <input type="text" name="codigo" id="codigoMaestro" required placeholder="Se genera automáticamente" readonly
+                        style="flex:1; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f0fdf4; color:#111827; outline:none; box-sizing:border-box; font-family:monospace;">
+                    <span id="badgeCodigoMaestro" style="display:none; background:#dcfce7; color:#16a34a; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap;">Automático</span>
+                </div>
             </div>
 
             {{-- Separador cuenta --}}
@@ -52,22 +54,24 @@
                 {{-- Email --}}
                 <div style="margin-bottom:14px;">
                     <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Correo electrónico <span style="color:#dc2626;">*</span></label>
-                    <input type="email" name="email" required placeholder="maestro@itm.edu.sv"
-                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
-                        onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <input type="email" name="email" id="emailMaestro" required placeholder="Se genera automáticamente" readonly
+                            style="flex:1; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f0fdf4; color:#111827; outline:none; box-sizing:border-box;">
+                        <span id="badgeEmailMaestro" style="display:none; background:#dcfce7; color:#16a34a; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap;">Automático</span>
+                    </div>
                 </div>
 
                 {{-- Contraseña --}}
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
                     <div>
                         <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Contraseña <span style="color:#dc2626;">*</span></label>
-                        <input type="password" name="password" required placeholder="Mínimo 8 caracteres"
+                        <input type="text" class="campo-secreto" name="password" required placeholder="Mínimo 8 caracteres"
                             style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                             onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
                     </div>
                     <div>
                         <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Confirmar contraseña <span style="color:#dc2626;">*</span></label>
-                        <input type="password" name="password_confirmation" required placeholder="Repetir contraseña"
+                        <input type="text" class="campo-secreto" name="password_confirmation" required placeholder="Repetir contraseña"
                             style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                             onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#e5e7eb'">
                     </div>
@@ -77,9 +81,14 @@
             {{-- Botones --}}
             <div style="display:flex; gap:10px; padding-top:4px;">
                 <button type="button" onclick="cerrarModalMaestro()"
-                    style="flex:1; padding:10px; background:#f3f4f6; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#374151; cursor:pointer;"
+                    style="padding:10px 16px; background:#f3f4f6; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#374151; cursor:pointer;"
                     onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                     Cancelar
+                </button>
+                <button type="button" onclick="limpiarFormularioMaestro()"
+                    style="padding:10px 16px; background:#ffffff; border:1px solid #e5e7eb; border-radius:10px; font-size:13px; font-weight:600; color:#6b7280; cursor:pointer;"
+                    onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='#ffffff'">
+                    Limpiar
                 </button>
                 <button type="submit"
                     style="flex:1; padding:10px; background:#111827; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#ffffff; cursor:pointer;"
@@ -90,3 +99,75 @@
         </form>
     </div>
 </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nombreInput   = document.getElementById('nombreNuevoMaestro');
+            const apellidoInput = document.getElementById('apellidoNuevoMaestro');
+            const codigoInput   = document.getElementById('codigoMaestro');
+            const emailInput    = document.getElementById('emailMaestro');
+            const badgeCodigo   = document.getElementById('badgeCodigoMaestro');
+            const badgeEmail    = document.getElementById('badgeEmailMaestro');
+
+            function limpiar(texto) {
+                return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ñ/g, 'n').replace(/Ñ/g, 'N');
+            }
+
+            function iniciales(nombre, apellido) {
+                const n = limpiar(nombre).trim().split(' ').filter(Boolean);
+                const a = limpiar(apellido).trim().split(' ').filter(Boolean);
+                let ini = '';
+                n.slice(0, 2).forEach(p => { if (p) ini += p[0].toUpperCase(); });
+                a.slice(0, 2).forEach(p => { if (p) ini += p[0].toUpperCase(); });
+                return ini;
+            }
+
+            let debounce;
+            async function actualizarCodigoMaestro() {
+                clearTimeout(debounce);
+                debounce = setTimeout(async () => {
+                    const nom = nombreInput?.value || '';
+                    const ape = apellidoInput?.value || '';
+                    const ini = iniciales(nom, ape);
+
+                    if (ini.length < 2) {
+                        codigoInput.value = '';
+                        emailInput.value = '';
+                        if (badgeCodigo) badgeCodigo.style.display = 'none';
+                        if (badgeEmail) badgeEmail.style.display = 'none';
+                        return;
+                    }
+
+                    try {
+                        const res = await fetch('{{ route("admin.maestros.siguienteCodigo") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ nombre: nom, apellido: ape })
+                        });
+                        const data = await res.json();
+                        codigoInput.value = data.codigo;
+                        emailInput.value = data.email;
+                        if (badgeCodigo) badgeCodigo.style.display = 'inline-block';
+                        if (badgeEmail) badgeEmail.style.display = 'inline-block';
+                    } catch (e) {
+                        console.error('Error al calcular código:', e);
+                    }
+                }, 300);
+            }
+
+            if (nombreInput) nombreInput.addEventListener('input', actualizarCodigoMaestro);
+            if (apellidoInput) apellidoInput.addEventListener('input', actualizarCodigoMaestro);
+
+            window.limpiarFormularioMaestro = function () {
+                const form = document.querySelector('#modalNuevoMaestro form');
+                if (form) form.reset();
+                if (codigoInput) codigoInput.value = '';
+                if (emailInput) emailInput.value = '';
+                if (badgeCodigo) badgeCodigo.style.display = 'none';
+                if (badgeEmail) badgeEmail.style.display = 'none';
+            };
+        });
+    </script>

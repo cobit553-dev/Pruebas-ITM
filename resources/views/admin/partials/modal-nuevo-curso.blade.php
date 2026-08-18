@@ -15,7 +15,7 @@
                 onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">✕</button>
         </div>
 
-        <form method="POST" action="{{ route('admin.secciones.store') }}" style="display:flex; flex-direction:column; gap:16px;">
+        <form method="POST" action="{{ route('admin.secciones.store') }}" autocomplete="off" style="display:flex; flex-direction:column; gap:16px;">
             @csrf
 
             {{-- Nombre y Sección --}}
