@@ -60,45 +60,71 @@ function initFirma(canvasId, dataId) {
 
 function limpiarFirma(canvasId, dataId) {
     const canvas = document.getElementById(canvasId);
-    const ctx    = canvas.getContext('2d');
+    const input = document.getElementById(dataId);
+
+
+    if (!canvas || !input) return;
+
+
+    const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    document.getElementById(dataId).value = '';
+    input.value = '';
     canvas.style.borderColor = '#e5e7eb';
 }
 
 function enviarSolicitud() {
-    const firmaA = document.getElementById('firmaAlumnoData').value;
-    const firmaE = document.getElementById('firmaEncargadoData').value;
-    const curso  = document.querySelector('.curso-radio:checked');
+    const firmaAlumnoInput = document.getElementById('firmaAlumnoData');
+    const firmaEncargadoInput = document.getElementById('firmaEncargadoData');
+    const curso = document.querySelector('.curso-radio:checked');
 
-    if (!firmaA) {
+
+    if (!firmaAlumnoInput || !firmaAlumnoInput.value) {
         alert('Por favor dibuja tu firma.');
         return;
     }
-    if (!firmaE) {
+
+
+    if (firmaEncargadoInput && !firmaEncargadoInput.value) {
         alert('Por favor dibuja la firma del encargado.');
         return;
     }
+
+
     if (!curso) {
         alert('Por favor selecciona una sección.');
         return;
     }
 
-    document.getElementById('formInscripcion').submit();
+
+    const formulario = document.getElementById('formInscripcion');
+
+
+    if (formulario) {
+        formulario.submit();
+    }
 }
+
+window.limpiarFirma = limpiarFirma;
+window.enviarSolicitud = enviarSolicitud;
 
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.curso-radio').forEach(radio => {
         radio.addEventListener('change', () => {
             document.querySelectorAll('.curso-card').forEach(c => {
                 c.style.borderColor = '#e5e7eb';
-                c.style.background  = '#ffffff';
+                c.style.background = '#ffffff';
             });
+
             radio.nextElementSibling.style.borderColor = '#f59e0b';
-            radio.nextElementSibling.style.background  = '#fefce8';
+            radio.nextElementSibling.style.background = '#fefce8';
         });
     });
 
-    initFirma('firmaAlumno', 'firmaAlumnoData');
-    initFirma('firmaEncargado', 'firmaEncargadoData');
+    if (document.getElementById('firmaAlumno')) {
+        initFirma('firmaAlumno', 'firmaAlumnoData');
+    }
+
+    if (document.getElementById('firmaEncargado')) {
+        initFirma('firmaEncargado', 'firmaEncargadoData');
+    }
 });

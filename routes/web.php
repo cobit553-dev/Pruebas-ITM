@@ -4,16 +4,11 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// ─────────────────────────────────────────────
-// RUTAS: COMÚNES
-// ─────────────────────────────────────────────
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
 // Dashboard general: despacha a cada rol hacia su propio panel.
-// Así, llegar a /dashboard (por marcador, autocompletado o redirect
-// pendiente de Laravel) nunca vuelve a dar 403 por rol equivocado.
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function (Request $request) {
 

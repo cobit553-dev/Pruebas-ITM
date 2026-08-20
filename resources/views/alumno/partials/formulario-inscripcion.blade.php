@@ -17,7 +17,7 @@
         <div style="flex:1; text-align:center;">
             <div style="width:32px; height:32px; border-radius:50%; background:#d1d5db; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; margin:0 auto 6px;">2</div>
             <p style="font-size:11px; color:#374151; font-weight:600; margin:0;">Firma digital</p>
-            <p style="font-size:10px; color:#9ca3af; margin:0;">Tú y tu encargado</p>
+            <p style="font-size:10px; color:#9ca3af; margin:0;">{{ $alumno->es_mayor_de_edad ? 'Tu firma' : 'Tú y tu encargado' }}</p>
         </div>
         <div style="flex:0; display:flex; align-items:center; padding-bottom:20px;">
             <div style="width:40px; height:1px; background:#e5e7eb;"></div>
@@ -76,44 +76,117 @@
             </div>
         </div>
 
-        {{-- SECCIÓN 2: Datos del encargado --}}
-        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
-            <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">Datos del Encargado</p>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-                <div>
-                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Nombre completo <span style="color:#dc2626;">*</span></label>
-                    <input type="text" name="encargado_nombre" required placeholder="Nombre y apellido del encargado"
-                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
-                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
-                </div>
-                <div>
-                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Teléfono del encargado</label>
-                    <input type="text" name="encargado_telefono" placeholder="Ej: 7777-8888"
-                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
-                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
-                </div>
-                <div>
-                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Parentesco <span style="color:#dc2626;">*</span></label>
-                    <select name="encargado_parentesco" required
-                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box; cursor:pointer;"
-                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
-                        <option value="">Seleccionar...</option>
-                        <option value="Padre">Padre</option>
-                        <option value="Madre">Madre</option>
-                        <option value="Tutor">Tutor</option>
-                        <option value="Abuelo/a">Abuelo/a</option>
-                        <option value="Tío/a">Tío/a</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">DUI del encargado</label>
-                    <input type="text" name="encargado_dui" placeholder="Ej: 00000000-0"
-                        style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;"
-                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e5e7eb'">
-                </div>
-            </div>
+        @if($alumno->es_mayor_de_edad)
+
+
+<div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+    <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">
+        Documento de Identidad
+    </p>
+
+
+    <div>
+        <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">
+            DUI del alumno <span style="color:#dc2626;">*</span>
+        </label>
+
+
+        <input
+            type="text"
+            name="alumno_dui"
+            value="{{ old('alumno_dui', $alumno->dui) }}"
+            required
+            placeholder="Ej: 00000000-0"
+            style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#ffffff; color:#111827; outline:none; box-sizing:border-box;">
+    </div>
+</div>
+
+
+@else
+
+
+<div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
+    <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 16px;">
+        Datos del Encargado
+    </p>
+
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+
+        <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">
+                Nombre completo <span style="color:#dc2626;">*</span>
+            </label>
+
+
+            <input
+                type="text"
+                name="encargado_nombre"
+                value="{{ old('encargado_nombre') }}"
+                required
+                placeholder="Nombre y apellido del encargado"
+                style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px;">
         </div>
+
+
+        <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">
+                Teléfono del encargado
+            </label>
+
+
+            <input
+                type="text"
+                name="encargado_telefono"
+                value="{{ old('encargado_telefono') }}"
+                placeholder="Ej: 7777-8888"
+                style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px;">
+        </div>
+
+
+        <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">
+                Parentesco <span style="color:#dc2626;">*</span>
+            </label>
+
+
+            <select
+                name="encargado_parentesco"
+                required
+                style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px;">
+                <option value="">Seleccionar...</option>
+                <option value="Padre" {{ old('encargado_parentesco') == 'Padre' ? 'selected' : '' }}>Padre</option>
+                <option value="Madre" {{ old('encargado_parentesco') == 'Madre' ? 'selected' : '' }}>Madre</option>
+                <option value="Tutor" {{ old('encargado_parentesco') == 'Tutor' ? 'selected' : '' }}>Tutor</option>
+                <option value="Abuelo/a" {{ old('encargado_parentesco') == 'Abuelo/a' ? 'selected' : '' }}>Abuelo/a</option>
+                <option value="Tío/a" {{ old('encargado_parentesco') == 'Tío/a' ? 'selected' : '' }}>Tío/a</option>
+                <option value="Otro" {{ old('encargado_parentesco') == 'Otro' ? 'selected' : '' }}>Otro</option>
+            </select>
+        </div>
+
+
+        <div>
+            <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">
+                DUI del encargado <span style="color:#dc2626;">*</span>
+            </label>
+
+
+            <input
+                type="text"
+                name="encargado_dui"
+                value="{{ old('encargado_dui') }}"
+                required
+                placeholder="Ej: 00000000-0"
+                style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px;">
+        </div>
+
+
+    </div>
+</div>
+
+
+@endif
 
         {{-- SECCIÓN 3: Selección de curso --}}
         <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
@@ -135,7 +208,11 @@
         {{-- SECCIÓN 4: Firmas digitales --}}
         <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:20px;">
             <p style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.05em; margin:0 0 6px;">Firmas Digitales</p>
-            <p style="font-size:12px; color:#6b7280; margin:0 0 16px;">Dibuja tu firma y la firma del encargado usando el mouse o el dedo en pantalla táctil.</p>
+            <p style="font-size:12px; color:#6b7280; margin:0 0 16px;">
+                {{ $alumno->es_mayor_de_edad
+                    ? 'Dibuja tu firma usando el mouse o el dedo en pantalla táctil.'
+                    : 'Dibuja tu firma y la firma del encargado usando el mouse o el dedo en pantalla táctil.' }}
+            </p>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
 
@@ -155,6 +232,7 @@
                 </div>
 
                 {{-- Firma del encargado --}}
+                @if(!$alumno->es_mayor_de_edad)
                 <div>
                     <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:8px;">Firma del Encargado <span style="color:#dc2626;">*</span></label>
                     <canvas id="firmaEncargado" width="300" height="120"
@@ -168,6 +246,7 @@
                         </button>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
 

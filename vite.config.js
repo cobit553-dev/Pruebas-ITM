@@ -13,7 +13,7 @@ export default defineConfig({
                 'resources/js/admin/notas.js',
                 'resources/js/admin/alumnos.js',
                 'resources/js/admin/mensualidades.js',
-                'resources/js/admin/secciones.js',
+                'resources/js/admin/cursos.js',
                 'resources/js/admin/solicitudes.js',
                 'resources/js/admin/materias.js',
                 'resources/js/admin/pagos.js',

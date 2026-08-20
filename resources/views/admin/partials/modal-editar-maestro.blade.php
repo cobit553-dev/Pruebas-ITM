@@ -69,7 +69,7 @@
                     </div>
                     <div>
                         <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Confirmar contraseña</label>
-                        <input type="text" class="campo-secreto" name="password_confirmation"
+                        <input type="text" class="campo-secreto" id="editPassword_confirmation" name="password_confirmation"
                             placeholder="Repetir nueva contraseña"
                             style="width:100%; padding:10px 14px; font-size:13px; border:1px solid #e5e7eb; border-radius:10px; background:#f9fafb; color:#111827; outline:none; box-sizing:border-box;"
                             onfocus="this.style.borderColor='#111827'" onblur="this.style.borderColor='#111827'">
