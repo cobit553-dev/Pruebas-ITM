@@ -398,12 +398,4 @@ class AdminDashboardController extends Controller
         return response()->json(['activa' => $materia->activa]);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────────────────
-    // ADMINISTRADOR: Encargados
-    // ─────────────────────────────────────────────────────────────────────────────────────────
-    public function encargados()
-    {
-        $encargados = Encargado::with('alumnos')->get();
-        return view('admin.encargados', compact('encargados'));
-    }
 }
