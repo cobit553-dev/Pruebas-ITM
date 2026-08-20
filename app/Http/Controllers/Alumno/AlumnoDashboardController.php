@@ -95,13 +95,57 @@ class AlumnoDashboardController extends Controller
     {
         $alumno = $this->getAlumno();
 
+        $esMayorDeEdad = $alumno->es_mayor_de_edad;
+
         $request->validate([
-            'curso_id'             => 'required|exists:cursos,id',
-            'encargado_nombre'     => 'required|string|max:255',
-            'encargado_parentesco' => 'required|string|max:50',
-            'firma_alumno'         => 'required|string',
-            'firma_encargado'      => 'required|string',
+            'curso_id' => 'required|exists:cursos,id',
+
+
+            'alumno_dui' => [
+                $esMayorDeEdad ? 'required' : 'nullable',
+                'string',
+                'regex:/^\d{8}-\d$/'
+            ],
+
+
+            'encargado_nombre' => [
+                $esMayorDeEdad ? 'nullable' : 'required',
+                'string',
+                'max:255'
+            ],
+
+
+            'encargado_parentesco' => [
+                $esMayorDeEdad ? 'nullable' : 'required',
+                'string',
+                'max:50'
+            ],
+
+
+            'encargado_dui' => [
+                $esMayorDeEdad ? 'nullable' : 'required',
+                'string',
+                'regex:/^\d{8}-\d$/'
+            ],
+
+
+            'encargado_telefono' => 'nullable|string|max:20',
+
+
+            'firma_alumno' => 'required|string',
+
+
+            'firma_encargado' => [
+                $esMayorDeEdad ? 'nullable' : 'required',
+                'string'
+            ],
         ]);
+
+        if ($esMayorDeEdad) {
+            $alumno->update([
+                'dui' => $request->alumno_dui
+            ]);
+        }
 
         // Verificar que no tenga solicitud activa o pendiente
         $existente = Inscripcion::where('alumno_id', $alumno->id)
@@ -151,9 +195,6 @@ class AlumnoDashboardController extends Controller
         return back()->with('success', '¡Solicitud enviada correctamente! El administrador la revisará pronto.');
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
-    // NOTAS
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
     public function notas()
     {
         $alumno = $this->getAlumno();
@@ -176,9 +217,6 @@ class AlumnoDashboardController extends Controller
         return view('alumno.notas', compact('alumno', 'inscripcion', 'notas', 'promedio'));
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
-    // PAGOS
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
     public function pagos()
     {
         $alumno = $this->getAlumno();
@@ -190,9 +228,6 @@ class AlumnoDashboardController extends Controller
         return view('alumno.pagos', compact('alumno', 'mensualidades'));
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
-    // INSCRIBIRSE DIRECTO (método anterior — ya no se usa con el nuevo flujo)
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
     public function inscribirse(Request $request)
     {
         $alumno = $this->getAlumno();
@@ -218,9 +253,6 @@ class AlumnoDashboardController extends Controller
         return back()->with('success', '¡Inscripción realizada correctamente!');
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
-    // DESCARGAR PDF (método anterior)
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
     public function descargarPdf()
     {
         $alumno            = $this->getAlumno();
@@ -232,9 +264,6 @@ class AlumnoDashboardController extends Controller
         return $pdf->download('solicitud-inscripcion-' . $alumno->codigo . '.pdf');
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
-    // SUBIR DOCUMENTO (método anterior)
-    // ═══════════════════════════════════════════════════════════════════════════════════════════
     public function subirDocumento(Request $request)
     {
         $alumno = $this->getAlumno();

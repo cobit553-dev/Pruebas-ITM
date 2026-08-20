@@ -11,7 +11,7 @@ class SeccionController extends Controller
     public function index()
     {
         $cursos = Curso::withCount('inscripciones')->orderBy('seccion')->get();
-        return view('admin.secciones', compact('cursos'));
+        return view('admin.cursos', compact('cursos'));
     }
 
     public function store(Request $request)
@@ -32,7 +32,7 @@ class SeccionController extends Controller
             'activo' => $request->filled('activo') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.secciones')->with('success', 'Sección registrada correctamente.');
+        return redirect()->route('admin.cursos')->with('success', 'Curso registrado correctamente.');
     }
 
     public function show($id)
@@ -56,6 +56,6 @@ class SeccionController extends Controller
     {
         $curso = Curso::findOrFail($id);
         $curso->update($request->only(['nombre', 'nivel', 'seccion', 'anio_lectivo', 'activo']));
-        return redirect()->route('admin.secciones')->with('success', 'Sección actualizada correctamente.');
+        return redirect()->route('admin.cursos')->with('success', 'Curso actualizado correctamente.');
     }
 }

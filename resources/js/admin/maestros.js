@@ -33,13 +33,43 @@ function cerrarModalMaestro() {
     document.body.style.overflow = '';
 }
 
+function abrirModalEditarMaestro(id, nombre, apellido, codigo, email) {
+    const modal = document.getElementById('modalEditarMaestro');
+    const form = document.getElementById('formEditarMaestro');
+
+    document.getElementById('editIdMaestro').value = id;
+    document.getElementById('editNombre').value = nombre;
+    document.getElementById('editApellido').value = apellido;
+    document.getElementById('editCodigo').value = codigo;
+    document.getElementById('editEmail').value = email;
+    document.getElementById('editPassword').value = '';
+    document.getElementById('editPassword_confirmation').value = '';
+
+    form.action = '/admin/maestros/' + id;
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalEditarMaestro() {
+    const modal = document.getElementById('modalEditarMaestro');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
 window.filtrarMaestros = filtrarMaestros;
 window.limpiarBusquedaMaestros = limpiarBusquedaMaestros;
 window.abrirModalMaestro = abrirModalMaestro;
 window.cerrarModalMaestro = cerrarModalMaestro;
+window.abrirModalEditarMaestro = abrirModalEditarMaestro;
+window.cerrarModalEditarMaestro = cerrarModalEditarMaestro;
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modalNuevoMaestro').addEventListener('click', function(e) {
         if (e.target === this) cerrarModalMaestro();
+    });
+
+    document.getElementById('modalEditarMaestro').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModalEditarMaestro();
     });
 });

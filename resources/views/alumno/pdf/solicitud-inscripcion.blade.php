@@ -77,30 +77,60 @@
         <div class="campo-valor">{{ $alumno->direccion ?? '—' }}</div>
     </div>
 
-    {{-- Datos del Encargado --}}
-    <div class="seccion-titulo">Datos del Encargado</div>
+    {{-- Datos del Encargado / Documento de Identidad --}}
+    @if($alumno->es_mayor_de_edad)
 
-    <div class="grid-2">
-        <div class="col">
-            <div class="campo-label">Nombre del encargado</div>
-            <div class="campo-valor">{{ $encargado_nombre }}</div>
-        </div>
-        <div class="col">
-            <div class="campo-label">Parentesco</div>
-            <div class="campo-valor">{{ $encargado_parentesco }}</div>
-        </div>
-    </div>
 
-    <div class="grid-2">
-        <div class="col">
-            <div class="campo-label">Teléfono del encargado</div>
-            <div class="campo-valor">{{ $encargado_telefono ?? '—' }}</div>
-        </div>
-        <div class="col">
-            <div class="campo-label">DUI del encargado</div>
-            <div class="campo-valor">{{ $encargado_dui ?? '—' }}</div>
-        </div>
+<div class="seccion-titulo">Documento de Identidad</div>
+
+
+<div class="campo">
+    <div class="campo-label">DUI del alumno</div>
+    <div class="campo-valor">
+        {{ $alumno->dui }}
     </div>
+</div>
+
+
+    @else
+
+
+<div class="seccion-titulo">Datos del Encargado</div>
+
+
+<div class="campo">
+    <div class="campo-label">Nombre</div>
+    <div class="campo-valor">
+        {{ $encargado_nombre }}
+    </div>
+</div>
+
+
+<div class="campo">
+    <div class="campo-label">Parentesco</div>
+    <div class="campo-valor">
+        {{ $encargado_parentesco }}
+    </div>
+</div>
+
+
+<div class="campo">
+    <div class="campo-label">Teléfono</div>
+    <div class="campo-valor">
+        {{ $encargado_telefono ?? '—' }}
+    </div>
+</div>
+
+
+<div class="campo">
+    <div class="campo-label">DUI</div>
+    <div class="campo-valor">
+        {{ $encargado_dui ?? '—' }}
+    </div>
+</div>
+
+
+    @endif
 
     {{-- Sección seleccionada --}}
     <div class="seccion-titulo">Sección Seleccionada</div>
@@ -142,12 +172,14 @@
             @endif
             <div class="firma-linea">Firma del Alumno</div>
         </div>
+        @if(!$alumno->es_mayor_de_edad)
         <div class="firma-col">
             @if(!empty($firma_encargado))
                 <img src="{{ $firma_encargado }}" class="firma-img">
             @endif
             <div class="firma-linea">Firma del Encargado</div>
         </div>
+        @endif
     </div>
 
     <div class="footer">

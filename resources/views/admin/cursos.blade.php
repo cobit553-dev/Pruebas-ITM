@@ -11,8 +11,8 @@
                     <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div>
-                    <h2 style="font-size:16px; font-weight:700; margin:0; color:#111827;">Gestión de Secciones</h2>
-                    <p style="font-size:12px; color:#6b7280; margin:0;">{{ $cursos->count() }} secciones activas</p>
+                    <h2 style="font-size:16px; font-weight:700; margin:0; color:#111827;">Gestión de Cursos</h2>
+                    <p style="font-size:12px; color:#6b7280; margin:0;">{{ $cursos->count() }} Cursos activos</p>
                 </div>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
@@ -21,7 +21,7 @@
                 <button onclick="abrirModalCurso()"
                     style="background:#111827; border:none; padding:8px 18px; border-radius:8px; color:#fff; font-size:12px; font-weight:600; cursor:pointer;"
                     onmouseover="this.style.background='#374151'" onmouseout="this.style.background='#111827'">
-                    + Nueva Sección
+                     + Nuevo Curso
                 </button>
             </div>
         </header>
@@ -89,8 +89,8 @@
                     </div>
 
                     <div style="display:flex; gap:8px;">
-                        <a href="{{ route('admin.secciones.edit', $curso->id) }}" class="btn-sm">Editar</a>
-                        <a href="{{ route('admin.secciones.show', $curso->id) }}" class="btn-black">Ver detalle</a>
+                        <a href="{{ route('admin.cursos.edit', $curso->id) }}" class="btn-sm">Editar</a>
+                        <a href="{{ route('admin.cursos.show', $curso->id) }}" class="btn-black">Ver detalle</a>
                     </div>
                 </div>
                 @endforeach
@@ -109,7 +109,7 @@
 @include('admin.partials.modal-nuevo-curso')
 
 @push('scripts')
-@vite('resources/js/admin/secciones.js')
+@vite('resources/js/admin/cursos.js')
 @endpush
 <x-logout-modal />
 </x-app-layout>

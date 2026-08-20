@@ -27,10 +27,11 @@
         </a>
         @endforeach
 
+
         <p class="sidebar-section-label">Académico</p>
         @foreach([
             ['Materias',route('admin.materias'),'M4 19.5A2.5 2.5 0 0 1 6.5 17H20'],
-            ['Secciones',route('admin.secciones'),'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'],
+            ['Cursos',route('admin.cursos'),'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'],
 ['Inscripciones',route('admin.inscripciones'),'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'],
              ['Notas',route('admin.notas'),'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'],
              ['Boletas',route('admin.boletas'),'M9 11l3 3L22 4']

@@ -40,21 +40,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/admin/materias/{materia}/toggle', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'toggleMateria'])
         ->name('admin.materias.toggle');
 
-    // ADMINISTRADOR: Secciones
-    Route::get('/admin/secciones', [\App\Http\Controllers\Admin\SeccionController::class, 'index'])
-        ->name('admin.secciones');
+    // ADMINISTRADOR: Cursos
+    Route::get('/admin/cursos', [\App\Http\Controllers\Admin\SeccionController::class, 'index'])
+        ->name('admin.cursos');
 
-    Route::post('/admin/secciones', [\App\Http\Controllers\Admin\SeccionController::class, 'store'])
-        ->name('admin.secciones.store');
+    Route::post('/admin/cursos', [\App\Http\Controllers\Admin\SeccionController::class, 'store'])
+        ->name('admin.cursos.store');
 
-    Route::get('/admin/secciones/{id}', [\App\Http\Controllers\Admin\SeccionController::class, 'show'])
-        ->name('admin.secciones.show');
+    Route::get('/admin/cursos/{id}', [\App\Http\Controllers\Admin\SeccionController::class, 'show'])
+        ->name('admin.cursos.show');
 
-    Route::get('/admin/secciones/{id}/editar', [\App\Http\Controllers\Admin\SeccionController::class, 'edit'])
-        ->name('admin.secciones.edit');
+    Route::get('/admin/cursos/{id}/editar', [\App\Http\Controllers\Admin\SeccionController::class, 'edit'])
+        ->name('admin.cursos.edit');
 
-    Route::put('/admin/secciones/{id}', [\App\Http\Controllers\Admin\SeccionController::class, 'update'])
-        ->name('admin.secciones.update');
+    Route::put('/admin/cursos/{id}', [\App\Http\Controllers\Admin\SeccionController::class, 'update'])
+        ->name('admin.cursos.update');
 
     // ADMINISTRADOR: Encargados
     Route::get('/admin/encargados', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'encargados'])

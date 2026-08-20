@@ -6,13 +6,13 @@
     <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; background:#f8fafc;">
 
         <header style="background:#ffffff; border-bottom:1px solid #e5e7eb; padding:14px 24px; display:flex; align-items:center; gap:12px; flex-shrink:0;">
-            <a href="{{ route('admin.secciones') }}"
+                        <a href="{{ route('admin.cursos') }}"
                style="width:32px; height:32px; border-radius:8px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; text-decoration:none; color:#6b7280;"
                onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
             </a>
             <div>
-                <h2 style="font-size:16px; font-weight:700; margin:0; color:#111827;">Editar Sección</h2>
+                <h2 style="font-size:16px; font-weight:700; margin:0; color:#111827;">Editar Curso</h2>
                 <p style="font-size:12px; color:#6b7280; margin:0;">{{ $curso->nombre }}</p>
             </div>
         </header>
@@ -28,7 +28,7 @@
                 </div>
                 @endif
 
-                <form method="POST" action="{{ route('admin.secciones.update', $curso->id) }}" autocomplete="off" style="display:flex; flex-direction:column; gap:18px;">
+                <form method="POST" action="{{ route('admin.cursos.update', $curso->id) }}" autocomplete="off" style="display:flex; flex-direction:column; gap:18px;">
                     @csrf
                     @method('PUT')
 
@@ -72,7 +72,7 @@
                     </div>
 
                     <div style="display:flex; gap:10px; padding-top:4px;">
-                        <a href="{{ route('admin.secciones') }}"
+            <a href="{{ route('admin.cursos') }}"
                            style="flex:1; padding:10px; border-radius:10px; background:#f3f4f6; color:#374151; font-size:13px; font-weight:600; border:none; cursor:pointer; text-align:center; text-decoration:none;"
                            onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                             Cancelar

@@ -31,6 +31,17 @@
             </div>
             @endif
 
+            @if($errors->any())
+            <div style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px;">
+                <p style="font-weight:700; margin:0 0 8px;">Corrige los siguientes campos:</p>
+                <ul style="margin:0; padding-left:18px;">
+                    @foreach($errors->all() as $error)
+                        <li style="margin-bottom:4px;">{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             @if($inscripcion && $inscripcion->estado === 'aprobada')
             {{-- Ya inscrito y aprobado --}}
             <div style="background:#ffffff; border:1px solid #e5e7eb; border-radius:14px; padding:24px; margin-bottom:20px;">
