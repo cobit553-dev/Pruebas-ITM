@@ -1,7 +1,7 @@
 <x-app-layout>
 <div style="display:flex; height:100vh; overflow:hidden;">
 
-    @include('components.admin-sidebar', ['active' => 'secciones'])
+    @include('components.admin-sidebar', ['active' => 'cursos'])
 
     <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; background:#f8fafc;">
 

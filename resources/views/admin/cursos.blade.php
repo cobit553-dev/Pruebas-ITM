@@ -1,7 +1,7 @@
 <x-app-layout>
 <div class="page-layout admin-sidebar">
 
-    @include('components.admin-sidebar', ['active' => 'secciones'])
+    @include('components.admin-sidebar', ['active' => 'cursos'])
 
     <div class="main-content main-content-alt">
 

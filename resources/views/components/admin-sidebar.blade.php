@@ -40,7 +40,7 @@
         Materias
     </a>
 
-    <a href="{{ route('admin.cursos') }}" class="sidebar-link {{ $active === 'secciones' ? 'active' : '' }}">
+    <a href="{{ route('admin.cursos') }}" class="sidebar-link {{ $active === 'cursos' ? 'active' : '' }}">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Cursos
     </a>

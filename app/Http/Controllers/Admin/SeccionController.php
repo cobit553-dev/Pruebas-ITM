@@ -43,13 +43,13 @@ class SeccionController extends Controller
             'detalleCursos.maestro',
         ])->findOrFail($id);
 
-        return view('admin.seccion-detalle', compact('curso'));
+        return view('admin.curso-detalle', compact('curso'));
     }
 
     public function edit($id)
     {
         $curso = Curso::findOrFail($id);
-        return view('admin.seccion-editar', compact('curso'));
+        return view('admin.curso-editar', compact('curso'));
     }
 
     public function update(Request $request, $id)
