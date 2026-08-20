@@ -1,6 +1,6 @@
 <x-app-layout>
 <div class="page-layout admin-sidebar">
-
+    {{-- todo es de el panel del ditector  --}}
     <aside class="sidebar sidebar-scroll">
         <div class="sidebar-brand">
             <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM Aguilares" class="sidebar-brand-img">
@@ -26,8 +26,7 @@
             {{ $label }}
         </a>
         @endforeach
-
-
+        {{-- Esta es la parte academica  --}}
         <p class="sidebar-section-label">Académico</p>
         @foreach([
             ['Materias',route('admin.materias'),'M4 19.5A2.5 2.5 0 0 1 6.5 17H20'],
@@ -41,7 +40,7 @@
             {{ $label }}
         </a>
         @endforeach
-
+        {{-- Esta es la parte de los pagos de los alumnos  --}}
         <p class="sidebar-section-label">Finanzas</p>
         @foreach([
             ['Mensualidades',route('admin.mensualidades'),'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'],
@@ -52,7 +51,7 @@
             {{ $label }}
         </a>
         @endforeach
-
+        {{-- Aqui es la parte de cerrar la seccion  --}}
         <div class="sidebar-user">
             <img src="{{ asset('images/logo_itm.jpg') }}" alt="ITM" style="width:32px; height:32px; border-radius:50%; flex-shrink:0; object-fit:cover;">
             <div style="flex:1; overflow:hidden;">
@@ -69,7 +68,7 @@
             </form>
         </div>
     </aside>
-
+    {{-- Esta es la parte de estadisticas que muestra datos como gagos, promedios y cosas asi --}}
     <div class="main-content main-content-alt">
 
         <header class="page-header">
@@ -98,7 +97,8 @@
                     </div>
                 </div>
             </div>
-
+            {{-- Aqui es para mostrar los alumnos, maestros, materias y pagos pendientes y que tambien
+             al tocar esas partaes nosllevara a la parte que correponde  --}}
             <div class="card-grid-4">
                 @foreach([
                     [$totalAlumnos,'Alumnos inscritos','#dbeafe','#1d4ed8','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', route('admin.alumnos')],
@@ -117,7 +117,7 @@
                 </a>
                 @endforeach
             </div>
-
+            {{-- Y aqui va amostrar los maestros que estan ativos  --}}
             <div class="card-grid-2">
 
                 <div class="card">
@@ -146,11 +146,11 @@
                     </div>
                     @endforelse
                 </div>
-
+                {{-- Aqui se muestra datos de el estado de mensaualidades  --}}
                 <div class="card">
                     <div class="card-header">
                         <p style="font-size:14px; font-weight:600; color:#0f172a; margin:0;">Estado de mensualidades</p>
-                        <a href="{{ route('admin.mensualidades') }}" class="btn-link" style="color:#16a34a;">Ver detalle</a>
+                        <a href="{{ route('admin.mensualidades') }}" class="btn-link" style="color:#16a34a;">Ver</a>
                     </div>
                     @forelse($estadoMensualidades as $m)
                     <div style="display:flex; align-items:center; gap:10px; padding:10px 18px; border-top:1px solid #f8fafc;">
